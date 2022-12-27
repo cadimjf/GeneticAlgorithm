@@ -1,0 +1,3 @@
+C:/Users/ricar/OneDrive/Documentos/GitHub/FisioPacer/GeneticAlgorithm/cmake-build-debug/CMakeFiles/GeneticAlgorithm.dir
+C:/Users/ricar/OneDrive/Documentos/GitHub/FisioPacer/GeneticAlgorithm/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/ricar/OneDrive/Documentos/GitHub/FisioPacer/GeneticAlgorithm/cmake-build-debug/CMakeFiles/rebuild_cache.dir
