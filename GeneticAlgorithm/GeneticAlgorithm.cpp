@@ -3,6 +3,7 @@
 //
 
 #include "GeneticAlgorithm.h"
+using namespace std;
 /**
  * Sets the elite size - the number of individuals kept to the next generation
  * @param e
@@ -75,12 +76,15 @@ GeneticAlgorithm::GeneticAlgorithm(int chromoSize, int nPopulation=100, int gm=1
         this->setAlpha(0.3);
         this->setMutationProb(0.05);
         this->setMutationB(3.0);
-        this->maxAllele = myAllocation<double>(this->chromossomeSize);
-        this->minAllele = myAllocation<double>(this->chromossomeSize);
         this->iniAlleleBoundaries();
+        cout<<"TEST"<<endl;
+
     }catch(MyException& caught){
         std::cout<<caught.getMessage()<<std::endl;
     }
+}
+GeneticAlgorithm::~GeneticAlgorithm(){
+
 }
 /**
  * set a max allele value for a specific gene (i)
@@ -109,24 +113,38 @@ void GeneticAlgorithm::setMinAllele(int i, double val){
  */
 void GeneticAlgorithm::iniAlleleBoundaries(){
     for(int i=0; i<this->chromossomeSize;i++){
-        this->setMinAllele(i, 0.0);
-        this->setMaxAllele(i, 1000.0);
+        this->minAllele.push_back(0.0);
+        this->maxAllele.push_back(1000.0);
     }
 }
 void GeneticAlgorithm::evolution(){
-    this->iniPopulation();
+    try{
+        cout<<"1"<<endl;
+        this->iniPopulation();
+        cout<<"2"<<endl;
+    }catch(MyException& caught){
+        std::cout<<caught.getMessage()<<std::endl;
+    }
 }
 void GeneticAlgorithm::iniPopulation(){
-    this->population = myAllocation<Individual*>(this->populationSize);
+    cout<<"Pop size "<<this->populationSize<<endl;
+    cout<<"Chromo size "<<this->chromossomeSize<<endl;
+    cout<<"coisei pop"<<endl;
     for(int i=0; i<this->populationSize; i++)
     {
-        this->population[i] = new Individual(i,
+        this->population.push_back(new Individual(i,
                                              this->generationMax,
                                              this->mutationProb, this->mutationB,
                                              this->populationSize, this->chromossomeSize,
-                                             this->minAllele, this->maxAllele);
+                                             this->minAllele, this->maxAllele));
+        this->population[i]->iniChromossome();
+    }
 
-        this->population[i]->iniChromossome(1.0);
+    for(int i=0; i<this->populationSize; i++){
+        cout<<i<<endl;
+        for(int j=0;j<this->chromossomeSize;j++){
+            cout<<"\t"<<this->population[i]->getGene(j)<<endl;
+        }
 
     }
 }

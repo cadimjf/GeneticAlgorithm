@@ -12,7 +12,7 @@
 
 Individual::Individual(int i, int generationMax, double mutationProb,
                        double mutationB, int pS, int cs,
-                       double *min, double* max)
+                       vector<double> min, vector<double> max)
 {
     this->chromossomeSize = cs;
     this->chromosome = new Chromosome(this->chromossomeSize, min, max);
@@ -109,12 +109,21 @@ void Individual::mutate() {
 /**
  *
  */
-void Individual::iniChromossome(double iniMutProb)
+void Individual::iniChromossome()
 {
     for (int i = 0; i < this->chromossomeSize; i++) {
-        double myDice = doubleRandom(0.0, 1.0, &this->individualRandomGenerator);
-        if (myDice < iniMutProb) {
-            this->chromosome->setAllele(i, uniformMutation(i));
-        }
+        double x = uniformMutation(i);
+        cout<<x<<endl;
+        this->chromosome->setAllele(i, x);
+
     }
+}
+/**
+ *
+ * @param i
+ * @return
+ */
+double Individual::getGene(int i){
+    return this->chromosome->getAllele(i);
+
 }

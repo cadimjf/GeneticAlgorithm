@@ -7,6 +7,8 @@
 
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>       /* time */
+#include <iostream>
+#include <vector>
 #include "Random.h"
 #include "Chromosome.h"
 #include "MyUtil.h"
@@ -21,19 +23,20 @@ using namespace std;
 class Individual {
 public:
     Individual(int i, int generationMax, double mutationProb, double mutationB, int pS, int cs,
-               double *min, double* max);
+               vector<double> min, vector<double> max);
     virtual ~Individual();
 
     void  mutate();
     void    setGeneration(int);
     int     getId();
-    void    iniChromossome(double);
+    void    iniChromossome();
     double  uniformMutation(int i);
     double   fitness;
     void changeBounds(int iChron, double min, double max);
     int fitnessRank;
     int populationSize;
-    string getStrFit();
+    double getGene(int i);
+
 private:
     double   nonUniformMutation(int i, double gene);
     double   delta(double y);

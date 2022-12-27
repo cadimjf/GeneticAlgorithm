@@ -9,12 +9,11 @@
  * @param min
  * @param max
  */
-Chromosome::Chromosome(int chromoSize, double *min, double* max){
+Chromosome::Chromosome(int chromoSize, vector<double> min, vector<double> max){
     this->chromosomeSize = chromoSize;
-    this->genes    = myAllocation<Gene*>(this->chromosomeSize);
     for(int i =0; i<this->chromosomeSize; i++){
-        this->genes[i]->setAlleleMax(max[i]);
-        this->genes[i]->setAlleleMin(min[i]);
+        Gene *g = new Gene(min[i], max[i]);
+        this->genes.push_back(g);
     }
 
 }
@@ -22,7 +21,6 @@ Chromosome::Chromosome(int chromoSize, double *min, double* max){
  *
  */
 Chromosome::~Chromosome(){
-    if (this->genes   != NULL) free(this->genes);
 
 }
 /**
@@ -45,7 +43,7 @@ double Chromosome::getMaxAllele(int i){
     if(i<0 || i>=this->chromosomeSize) {
         throw MyException("index out of boundaries", __FILE__, __LINE__);
     }
-    this->genes[i]->getAlleleMax();
+    return this->genes[i]->getAlleleMax();
 }
 /**
  *
@@ -56,6 +54,16 @@ double Chromosome::getMinAllele(int i){
     if(i<0 || i>=this->chromosomeSize) {
         throw MyException("index out of boundaries", __FILE__, __LINE__);
     }
-    this->genes[i]->getAlleleMin();
+    return this->genes[i]->getAlleleMin();
+}
+/**
+ *
+ * @param i
+ */
+double Chromosome::getAllele(int i){
+    if(i<0 || i>=this->chromosomeSize) {
+        throw MyException("index out of boundaries", __FILE__, __LINE__);
+    }
+    return this->genes[i]->getAllele();
 }
 

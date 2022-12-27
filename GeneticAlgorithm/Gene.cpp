@@ -12,7 +12,7 @@
 Gene::Gene(double min, double max){
     this->setAlleleMax(max);
     this->setAlleleMin(min);
-    this->setAllele(0);
+    this->setAllele(0.0);
 }
 /**
  *  set the max boundary for the gene

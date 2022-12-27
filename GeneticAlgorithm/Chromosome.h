@@ -5,23 +5,27 @@
 #ifndef GENETICALGORITHM_CHROMOSOME_H
 #define GENETICALGORITHM_CHROMOSOME_H
 
-#include <stdio.h>
+#include <iostream>
+#include <vector>
 #include <math.h>
+#include <iostream>
+#include <vector>
 #include "Gene.h"
 #include "MyUtil.h"
+
 using namespace std;
 
 class Chromosome {
 private:
-    Gene   **genes;
+    std::vector<Gene*> genes;
     int chromosomeSize;
 public:
-    Chromosome(int, double *min, double* max);
+    Chromosome(int, vector<double> min, vector<double> max);
     virtual ~Chromosome();
     void setAllele(int i, double val);
     double getMaxAllele(int);
     double getMinAllele(int);
-
+    double getAllele(int i);
 
 
 };

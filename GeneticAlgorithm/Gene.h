@@ -4,7 +4,8 @@
 
 #ifndef GENETICALGORITHM_GENE_H
 #define GENETICALGORITHM_GENE_H
-
+#include <iostream>
+#include <vector>
 
 class Gene {
 private:

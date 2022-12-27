@@ -4,15 +4,18 @@
 
 #ifndef GENETICALGORITHM_GENETICALGORITHM_H
 #define GENETICALGORITHM_GENETICALGORITHM_H
-
+#include <iostream>
+#include <vector>
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>       /* time */
 #include "Random.h"
 #include "Individual.h"
 #include "MyUtil.h"
+using namespace std;
 class GeneticAlgorithm {
 public:
     GeneticAlgorithm(int cs, int nPopulation, int gm);
+    ~GeneticAlgorithm();
     void setElite(int);
     void setCrossOverProb(double);
     void setThreadsNumber(int);
@@ -42,9 +45,9 @@ private:
     double      alpha;
     double      mutationB;
     double      mutationProb;
-    Individual  **population;
-    double *maxAllele;
-    double *minAllele;
+    std::vector<Individual*> population;
+    std::vector<double> maxAllele;
+    std::vector<double> minAllele;
     int chromossomeSize;
 };
 
