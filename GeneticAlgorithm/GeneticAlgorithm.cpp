@@ -48,7 +48,7 @@ void GeneticAlgorithm::setMutationProb(double mp){
  * @param nPopulation
  * @param gm
  */
-GeneticAlgorithm::GeneticAlgorithm(int chromoSize, int nPopulation=100, int gm=100)
+GeneticAlgorithm::GeneticAlgorithm(int chromoSize, int nPopulation, int gm, double(*function_ptr_fitness)(vector<double>) )
 {
     try {
         this->populationSize = nPopulation;
@@ -193,11 +193,6 @@ void GeneticAlgorithm::crossOver(int p1, int p2, int iInd)
  * performs the crossover and mutation for a single generation
  */
 void GeneticAlgorithm::generation(){
-    for(int i=0;i<this->chromossomeSize;i++){
-        cout<<this->population[0]->getChromossomeAux(i)<<" ";
-    }
-    cout<<endl;
-
     ///Ignores the first elements - since they are the elite they are not changed
     for(int i=this->elite; i<this->populationSize; i++)
     {
@@ -205,15 +200,11 @@ void GeneticAlgorithm::generation(){
         int parent1 = this->rankSelection(-1);//-1 means we can choose any parent
         int parent2 = this->rankSelection(parent1); //chose anyone but the first parent again
         //create a new guy from crossover
-        //this->crossOver(parent1, parent2, i);
+        this->crossOver(parent1, parent2, i);
         //mutation
         this->population[i]->mutate(this->generationCurrent);
     }
-    for(int i=0;i<this->chromossomeSize;i++){
-        cout<<this->population[0]->getChromossomeAux(i)<<" ";
-    }
-    cout<<endl;
-    cout<<"-----------------------"<<endl;
+
 
 }
 /**
@@ -223,25 +214,17 @@ void GeneticAlgorithm::generation(){
 void GeneticAlgorithm::evolution(){
     try{
         this->iniPopulation();
-        for(int i=0;i<this->chromossomeSize;i++){
-            cout<<this->population[0]->getChromossomeAux(i)<<" ";
-        }
-        cout<<endl;
-        cout<<"========================="<<endl;
         for(generationCurrent=1;generationCurrent<=generationMax;generationCurrent++){
             //performs the crossovers and mutations
             this->generation();
-
-
             //After applying all genetic operation in the generation,
             //puts the new genes in the individual chromosome
             for(int i=this->elite; i<this->populationSize; i++){
                 this->population[i]->updateChromossome();
             }
             //computes the fitness (defined by user)
+
             //orders the population according to the fitness
-
-
             this->quickSort(0, this->populationSize-1);
         }
         cout<<"Finished evolution: "<<generationCurrent<<endl;
@@ -264,8 +247,6 @@ void GeneticAlgorithm::iniPopulation(){
     }
 
 }
-
-
 /**
  * The partition function
  * @param input

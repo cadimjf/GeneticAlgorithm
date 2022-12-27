@@ -14,7 +14,7 @@
 using namespace std;
 class GeneticAlgorithm {
 public:
-    GeneticAlgorithm(int cs, int nPopulation, int gm);
+    GeneticAlgorithm(int cs, int nPopulation, int gm, double(*function_ptr_fitness)(vector<double>));
     ~GeneticAlgorithm();
     void setElite(int);
     void setCrossOverProb(double);
