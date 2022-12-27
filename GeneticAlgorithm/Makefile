@@ -1,8 +1,8 @@
 CC = g++
-CFLAGS = -Wall -fopenmp -O3 -I/C/MinGW/lib/gcc/mingw32/6.3.0/include
+CFLAGS = -Wall -fopenmp -O3 -std=c++11 -fopenmp
 LDFLAGS =
 OBJFILES = Random.o MyUtil.o Gene.o Chromosome.o Individual.o GeneticAlgorithm.o main.o
-TARGET = geneticalgorithm
+TARGET = GA
 
 all: $(TARGET)
 $(TARGET): $(OBJFILES)

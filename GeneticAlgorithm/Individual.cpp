@@ -91,7 +91,7 @@ double Individual::nonUniformMutation(int i, double gene) {
  *
  */
 void Individual::mutate() {
-    double *myCromo = (double*)malloc(sizeof(double)*this->getChromoLength());
+    /*double *myCromo = (double*)malloc(sizeof(double)*this->getChromoLength());
     this->getChromosome(myCromo);
 
     for (int i = 0; i < this->getChromoLength(); i++) {
@@ -103,7 +103,7 @@ void Individual::mutate() {
         }
     }
     this->setChromosome(myCromo);
-    free(myCromo);
+    free(myCromo);*/
 }
 
 /**
@@ -117,60 +117,4 @@ void Individual::iniChromossome(double iniMutProb)
             this->chromosome->setAllele(i, uniformMutation(i));
         }
     }
-    this->setChromosome(myCromo);
-    free(myCromo);
 }
-
-/**
- *
- * @return
- */
-double Individual::getFitness() {
-    return this->fitness;
-}
-/**
- *
- * @param fit
- */
-void Individual::setFitness(double fit) {
-    this->fitness = fit;
-}
-
-/**
- *
- * @param gen
- */
-void Individual::setGeneration(int gen) {
-    this->generation = gen;
-}
-
-
-
-
-
-/**
- *
- * @return
- */
-int Individual::getChromoLength() {
-    return this->cromos->getLength();
-}
-/**
- *
- * @param chromossomes
- */
-void Individual::getChromosome(double* chromossomes){
-    this->cromos->getChromosome(chromossomes);
-}
-/**
- *
- * @param chromossome
- */
-void Individual::setChromosome(double *chromossome) {
-    this->cromos->setChromosome(chromossome);
-}
-
-string Individual::getStrFit(){
-    return this->gaExp->getStrFit();
-}*/
-
