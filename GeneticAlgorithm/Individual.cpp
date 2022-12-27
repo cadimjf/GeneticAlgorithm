@@ -14,9 +14,12 @@ Individual::Individual(int i, int generationMax, double mutationProb,
                        double mutationB, int pS, int cs,
                        vector<double> min, vector<double> max)
 {
-    this->chromossomeSize = cs;
-    this->chromosome = new Chromosome(this->chromossomeSize, min, max);
-
+    this->chromosomeSize = cs;
+    this->chromosome = new Chromosome(this->chromosomeSize, min, max);
+    //initialize the aux chromossome with a copy from the chromossomes
+    for (int i=0;i<this->chromosomeSize;i++){
+        this->chromosomeAUX.push_back(this->chromosome->getAllele(i));
+    }
     this->populationSize = pS;
     this->b = mutationB;
     this->maxGeneration = generationMax;
@@ -111,9 +114,8 @@ void Individual::mutate() {
  */
 void Individual::iniChromossome()
 {
-    for (int i = 0; i < this->chromossomeSize; i++) {
+    for (int i = 0; i < this->chromosomeSize; i++) {
         double x = uniformMutation(i);
-        cout<<x<<endl;
         this->chromosome->setAllele(i, x);
 
     }
@@ -126,4 +128,19 @@ void Individual::iniChromossome()
 double Individual::getGene(int i){
     return this->chromosome->getAllele(i);
 
+}
+/**
+ * Copies alleles from chromosomeAUX to realchromossomes
+ */
+void Individual::updateChromossome(){
+    for (int i=0;i<this->chromosomeSize;i++){
+        this->chromosome->setAllele(i, this->chromosomeAUX[i]);
+    }
+}
+
+void Individual::setChromossomeAux(int i, double val){
+    if(i<0 || i>=this->chromosomeSize) {
+        throw MyException("index out of boundaries", __FILE__, __LINE__);
+    }
+    this->chromosomeAUX[i] = val;
 }

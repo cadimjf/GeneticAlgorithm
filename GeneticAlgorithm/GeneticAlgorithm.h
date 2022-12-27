@@ -18,7 +18,6 @@ public:
     ~GeneticAlgorithm();
     void setElite(int);
     void setCrossOverProb(double);
-    void setThreadsNumber(int);
     void setAlpha(double);
     void setMutationB(double);
     void setMutationProb(double);
@@ -41,7 +40,6 @@ private:
     int         iWorst;
     default_random_engine agRandomGenerator;
     double      crossOverProb;
-    int         numThreads;
     double      alpha;
     double      mutationB;
     double      mutationProb;
@@ -49,6 +47,11 @@ private:
     std::vector<double> maxAllele;
     std::vector<double> minAllele;
     int chromossomeSize;
+    void generation();
+    int rankSelection(int forbidenGuy);
+    double sumRank;
+    void crossOver(int p1, int p2, int iInd);
+    double crossOverBLXAlpha(double gene1, double gene2);
 };
 
 

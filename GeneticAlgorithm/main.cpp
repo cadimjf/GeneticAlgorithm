@@ -6,5 +6,6 @@ int main() {
     ga->setMaxAllele(0, 10);
     ga->evolution();
     delete(ga);
+    cout<<"apaguei memo"<<endl;
     return 0;
 }

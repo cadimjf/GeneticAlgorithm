@@ -36,20 +36,21 @@ public:
     int fitnessRank;
     int populationSize;
     double getGene(int i);
-
+    void updateChromossome();
+    void setChromossomeAux(int i, double val);
 private:
     double   nonUniformMutation(int i, double gene);
     double   delta(double y);
     default_random_engine individualRandomGenerator;
-
+    vector<double> chromosomeAUX;
     Chromosome *chromosome;
-    int chromossomeSize;
+    int chromosomeSize;
     int     id;
     double   b;
     int     maxGeneration;
     int     generation;
-
     double mutationProb;
+
 
 
 };

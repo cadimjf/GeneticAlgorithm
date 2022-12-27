@@ -15,13 +15,12 @@ Chromosome::Chromosome(int chromoSize, vector<double> min, vector<double> max){
         Gene *g = new Gene(min[i], max[i]);
         this->genes.push_back(g);
     }
-
 }
 /**
  *
  */
 Chromosome::~Chromosome(){
-
+    this->genes.clear();
 }
 /**
  *
