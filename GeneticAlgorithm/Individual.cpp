@@ -77,13 +77,13 @@ double Individual::delta(double y) {
  * @param geneUpperBound
  */
 double Individual::nonUniformMutation(int i, double gene) {
-//    double gene = this->getGeneByIndex(i);
+/*//    double gene = this->getGeneByIndex(i);
     int theta = intRandom(0, 1, &this->individualRandomGenerator);
     double aux = (theta == 0) ?
                  (this->cromos->getUpperBound(i) - gene) :
                  (gene - this->cromos->getLowerBound(i));
     double d = delta(aux);
-    return fabs(gene + d);
+    return fabs(gene + d);*/
 
 }
 
