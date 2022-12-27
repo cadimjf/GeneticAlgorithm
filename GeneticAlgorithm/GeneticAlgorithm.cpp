@@ -51,6 +51,7 @@ void GeneticAlgorithm::setMutationProb(double mp){
 GeneticAlgorithm::GeneticAlgorithm(int chromoSize, int nPopulation, int gm, double(*function_ptr_fitness)(vector<double>) )
 {
     try {
+        this->function_ptr_fitness = function_ptr_fitness;
         this->populationSize = nPopulation;
         this->avgFitness = 0.0;
         this->sumFit = 0.0;
@@ -217,15 +218,13 @@ void GeneticAlgorithm::evolution(){
         for(generationCurrent=1;generationCurrent<=generationMax;generationCurrent++){
             //performs the crossovers and mutations
             this->generation();
-            //After applying all genetic operation in the generation,
-            //puts the new genes in the individual chromosome
+            //computes the fitness
             for(int i=this->elite; i<this->populationSize; i++){
-                this->population[i]->updateChromossome();
+                this->population[i]->computeFitness();
             }
-            //computes the fitness (defined by user)
-
             //orders the population according to the fitness
             this->quickSort(0, this->populationSize-1);
+            cout<<population[0]->getFitness()<<" "<<population[1]->getFitness()<<endl;
         }
         cout<<"Finished evolution: "<<generationCurrent<<endl;
     }catch(MyException& caught){
@@ -242,7 +241,7 @@ void GeneticAlgorithm::iniPopulation(){
                                              this->generationMax,
                                              this->mutationProb, this->mutationB,
                                              this->populationSize, this->chromossomeSize,
-                                             this->minAllele, this->maxAllele));
+                                             this->minAllele, this->maxAllele, this->function_ptr_fitness));
         this->population[i]->iniChromossome();
     }
 

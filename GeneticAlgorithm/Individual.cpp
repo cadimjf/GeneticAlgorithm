@@ -3,17 +3,23 @@
 //
 
 #include "Individual.h"
-/*
- * File:   Individual.cpp
- * Author: Ricardo
+/**
  *
- * Created on 1 de Agosto de 2014, 15:17
+ * @param i
+ * @param generationMax
+ * @param mutationProb
+ * @param mutationB
+ * @param pS
+ * @param cs
+ * @param min
+ * @param max
+ * @param func_ptr_fit
  */
-
 Individual::Individual(int i, int generationMax, double mutationProb,
                        double mutationB, int pS, int cs,
-                       vector<double> min, vector<double> max)
+                       vector<double> min, vector<double> max, double(*func_ptr_fit)(vector<double>))
 {
+    this->function_ptr_fitness = func_ptr_fit;
     this->chromosomeSize = cs;
     this->chromosome = new Chromosome(this->chromosomeSize, min, max);
     //initialize the aux chromossome with a copy from the chromossomes
@@ -136,15 +142,37 @@ void Individual::updateChromossome(){
         this->chromosome->setAllele(i, this->chromosomeAUX[i]);
     }
 }
-
+/**
+ *
+ * @param i
+ * @param val
+ */
 void Individual::setChromossomeAux(int i, double val){
     this->chromosomeAUX.at(i) = val;
  }
-
+/**
+ *
+ * @param i
+ * @return
+ */
 double Individual::getChromossomeAux(int i){
     return this->chromosomeAUX.at(i) ;
 }
-
+/**
+ *
+ * @return
+ */
 double Individual::getFitness(){
     return this->fitness;
+}
+/**
+ *
+ */
+void Individual::computeFitness(){
+    //computes the fitness (defined by user)
+    this->fitness = this->function_ptr_fitness(this->chromosomeAUX);
+    //After applying all genetic operation in the generation,
+    //puts the new genes in the individual chromosome
+    this->updateChromossome();
+
 }

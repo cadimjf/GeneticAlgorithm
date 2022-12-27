@@ -23,7 +23,7 @@ using namespace std;
 class Individual {
 public:
     Individual(int i, int generationMax, double mutationProb, double mutationB, int pS, int cs,
-               vector<double> min, vector<double> max);
+               vector<double> min, vector<double> max, double(*func_ptr_fit)(vector<double>));
     virtual ~Individual();
 
     void  mutate(int gen);
@@ -38,8 +38,12 @@ public:
     void updateChromossome();
     void setChromossomeAux(int i, double val);
     double getFitness();
+
     double getChromossomeAux(int);
+    void computeFitness();
 private:
+
+    double(*function_ptr_fitness)(vector<double>);
     double  uniformMutation(int i);
     double   nonUniformMutation(int i, int gen);
     double   delta(double y,int gen);

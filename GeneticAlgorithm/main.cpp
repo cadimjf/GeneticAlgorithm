@@ -14,13 +14,13 @@ double myFitness(vector<double> param){
 int main() {
     double (*function_ptr)(vector<double>) = &myFitness;
     //(*function_ptr)()
-    GeneticAlgorithm *ga = new GeneticAlgorithm(2, 5, 10, function_ptr);
+    GeneticAlgorithm *ga = new GeneticAlgorithm(2, 50, 100, function_ptr);
     //ga->setMutationProb(0.1);
-    ga->setElite(1);
+    ga->setElite(0);
     std::cout << "Hello, World!er" << std::endl;
-    ga->setMaxAllele(0, 10);
-    ga->setMinAllele(1, 10000);
-    ga->setMaxAllele(1, 20000);
+    ga->setMaxAllele(0, 100);
+    //ga->setMinAllele(1, 100);
+    ga->setMaxAllele(1, 100);
     ga->evolution();
     delete(ga);
     cout<<"apaguei memo"<<endl;

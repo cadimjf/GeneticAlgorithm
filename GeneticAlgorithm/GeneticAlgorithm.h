@@ -14,7 +14,7 @@
 using namespace std;
 class GeneticAlgorithm {
 public:
-    GeneticAlgorithm(int cs, int nPopulation, int gm, double(*function_ptr_fitness)(vector<double>));
+    GeneticAlgorithm(int cs, int nPopulation, int gm, double(*func_ptr_fit)(vector<double>));
     ~GeneticAlgorithm();
     void setElite(int);
     void setCrossOverProb(double);
@@ -25,6 +25,7 @@ public:
     void setMinAllele(int i, double val);
     void setMaxAllele(int i, double val);
 private:
+    double(*function_ptr_fitness)(vector<double>);
     void iniAlleleBoundaries();
     void iniPopulation();
     unsigned    agSeed;
