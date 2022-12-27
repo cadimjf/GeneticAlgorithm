@@ -26,11 +26,10 @@ public:
                vector<double> min, vector<double> max);
     virtual ~Individual();
 
-    void  mutate();
+    void  mutate(int gen);
     void    setGeneration(int);
     int     getId();
     void    iniChromossome();
-    double  uniformMutation(int i);
     double   fitness;
     void changeBounds(int iChron, double min, double max);
     int fitnessRank;
@@ -38,9 +37,12 @@ public:
     double getGene(int i);
     void updateChromossome();
     void setChromossomeAux(int i, double val);
+    double getFitness();
+    double getChromossomeAux(int);
 private:
-    double   nonUniformMutation(int i, double gene);
-    double   delta(double y);
+    double  uniformMutation(int i);
+    double   nonUniformMutation(int i, int gen);
+    double   delta(double y,int gen);
     default_random_engine individualRandomGenerator;
     vector<double> chromosomeAUX;
     Chromosome *chromosome;
@@ -48,7 +50,6 @@ private:
     int     id;
     double   b;
     int     maxGeneration;
-    int     generation;
     double mutationProb;
 
 

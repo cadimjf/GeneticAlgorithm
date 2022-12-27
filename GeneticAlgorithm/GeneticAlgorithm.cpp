@@ -193,6 +193,11 @@ void GeneticAlgorithm::crossOver(int p1, int p2, int iInd)
  * performs the crossover and mutation for a single generation
  */
 void GeneticAlgorithm::generation(){
+    for(int i=0;i<this->chromossomeSize;i++){
+        cout<<this->population[0]->getChromossomeAux(i)<<" ";
+    }
+    cout<<endl;
+
     ///Ignores the first elements - since they are the elite they are not changed
     for(int i=this->elite; i<this->populationSize; i++)
     {
@@ -200,10 +205,16 @@ void GeneticAlgorithm::generation(){
         int parent1 = this->rankSelection(-1);//-1 means we can choose any parent
         int parent2 = this->rankSelection(parent1); //chose anyone but the first parent again
         //create a new guy from crossover
-        this->crossOver(parent1, parent2, i);
-        //this->population[i]->mutate();
-        this->population[i]->updateChromossome();
+        //this->crossOver(parent1, parent2, i);
+        //mutation
+        this->population[i]->mutate(this->generationCurrent);
     }
+    for(int i=0;i<this->chromossomeSize;i++){
+        cout<<this->population[0]->getChromossomeAux(i)<<" ";
+    }
+    cout<<endl;
+    cout<<"-----------------------"<<endl;
+
 }
 /**
  *
@@ -212,12 +223,28 @@ void GeneticAlgorithm::generation(){
 void GeneticAlgorithm::evolution(){
     try{
         this->iniPopulation();
+        for(int i=0;i<this->chromossomeSize;i++){
+            cout<<this->population[0]->getChromossomeAux(i)<<" ";
+        }
+        cout<<endl;
+        cout<<"========================="<<endl;
         for(generationCurrent=1;generationCurrent<=generationMax;generationCurrent++){
             //performs the crossovers and mutations
             this->generation();
-            //computes the fitness (defined by user)
 
+
+            //After applying all genetic operation in the generation,
+            //puts the new genes in the individual chromosome
+            for(int i=this->elite; i<this->populationSize; i++){
+                this->population[i]->updateChromossome();
+            }
+            //computes the fitness (defined by user)
+            //orders the population according to the fitness
+
+
+            this->quickSort(0, this->populationSize-1);
         }
+        cout<<"Finished evolution: "<<generationCurrent<<endl;
     }catch(MyException& caught){
         std::cout<<caught.getMessage()<<std::endl;
     }
@@ -236,4 +263,46 @@ void GeneticAlgorithm::iniPopulation(){
         this->population[i]->iniChromossome();
     }
 
+}
+
+
+/**
+ * The partition function
+ * @param input
+ * @param p
+ * @param r
+ * @return
+ */
+int GeneticAlgorithm::partitionQckSort(int p, int r)
+{
+    double pivot = this->population[r]->getFitness();
+    int i = p-1;
+    for(int j=p;j<r;j++)
+    {
+        if(this->population[j]->getFitness()<=pivot){
+            i++;
+            Individual *aux     = this->population[i];
+            this->population[i] = this->population[j];
+            this->population[j] = aux;
+        }
+    }
+    Individual *aux     = this->population[i+1];
+    this->population[i+1] = this->population[r];
+    this->population[r] = aux;
+    return i+1;
+}
+/**
+ * The quicksort recursive function
+ * http://www.sourcetricks.com/2011/06/what-is-quick-sort-algorithm-how-to.html
+ * @param p
+ * @param r
+ */
+void GeneticAlgorithm::quickSort( int p, int r)
+{
+    if ( p < r )
+    {
+        int j = partitionQckSort(p, r);
+        quickSort(p, j-1);
+        quickSort(j+1, r);
+    }
 }

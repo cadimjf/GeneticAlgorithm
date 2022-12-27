@@ -28,10 +28,7 @@ Chromosome::~Chromosome(){
  * @param val
  */
 void Chromosome::setAllele(int i, double val){
-    if(i<0 || i>=this->chromosomeSize) {
-        throw MyException("index out of boundaries", __FILE__, __LINE__);
-    }
-    this->genes[i]->setAllele(val);
+    this->genes.at(i)->setAllele(val);
 }
 /**
  *
@@ -39,10 +36,7 @@ void Chromosome::setAllele(int i, double val){
  * @return
  */
 double Chromosome::getMaxAllele(int i){
-    if(i<0 || i>=this->chromosomeSize) {
-        throw MyException("index out of boundaries", __FILE__, __LINE__);
-    }
-    return this->genes[i]->getAlleleMax();
+    return this->genes.at(i)->getAlleleMax();
 }
 /**
  *
@@ -50,19 +44,13 @@ double Chromosome::getMaxAllele(int i){
  * @return
  */
 double Chromosome::getMinAllele(int i){
-    if(i<0 || i>=this->chromosomeSize) {
-        throw MyException("index out of boundaries", __FILE__, __LINE__);
-    }
-    return this->genes[i]->getAlleleMin();
+    return this->genes.at(i)->getAlleleMin();
 }
 /**
  *
  * @param i
  */
 double Chromosome::getAllele(int i){
-    if(i<0 || i>=this->chromosomeSize) {
-        throw MyException("index out of boundaries", __FILE__, __LINE__);
-    }
-    return this->genes[i]->getAllele();
+    return this->genes.at(i)->getAllele();
 }
 

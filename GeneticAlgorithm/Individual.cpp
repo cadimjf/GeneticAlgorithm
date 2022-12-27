@@ -23,7 +23,7 @@ Individual::Individual(int i, int generationMax, double mutationProb,
     this->populationSize = pS;
     this->b = mutationB;
     this->maxGeneration = generationMax;
-
+    this->fitness = 0.0;
     this->mutationProb = mutationProb;
 
     this->id = id;
@@ -68,9 +68,9 @@ double Individual::uniformMutation(int i) {
  * @param y
  * @return
  */
-double Individual::delta(double y) {
+double Individual::delta(double y, int generation) {
     double r = doubleRandom(0.0, 1.0, &this->individualRandomGenerator);
-    return y * (1.0 - powf(r, powf(1.0 - double(this->generation) / double(this->maxGeneration), this->b)));
+    return y * (1.0 - powf(r, powf(1.0 - double(generation) / double(this->maxGeneration), this->b)));
 }
 
 /**
@@ -79,34 +79,33 @@ double Individual::delta(double y) {
  * @param geneLowerBound
  * @param geneUpperBound
  */
-double Individual::nonUniformMutation(int i, double gene) {
-/*//    double gene = this->getGeneByIndex(i);
+double Individual::nonUniformMutation(int i, int generation) {
+
+    double gene = this->getGene(i);
     int theta = intRandom(0, 1, &this->individualRandomGenerator);
     double aux = (theta == 0) ?
-                 (this->cromos->getUpperBound(i) - gene) :
-                 (gene - this->cromos->getLowerBound(i));
-    double d = delta(aux);
-    return fabs(gene + d);*/
+                 (this->chromosome->getMaxAllele(i) - gene) :
+                 (gene - this->chromosome->getMinAllele(i));
+    double d = delta(aux, generation);
+    double m = fabs(gene + d);
+    return m;
 
 }
-
-/**
+/***
  *
  */
-void Individual::mutate() {
-    /*double *myCromo = (double*)malloc(sizeof(double)*this->getChromoLength());
-    this->getChromosome(myCromo);
+void Individual::mutate(int generation) {
 
-    for (int i = 0; i < this->getChromoLength(); i++) {
+    for (int i = 0; i < this->chromosomeSize; i++) {
         //generate a random number
         double myDice = doubleRandom(0.0, 1.0, &this->individualRandomGenerator);
         //check my random number with mutation probability
         if (myDice<this->mutationProb) {
-            myCromo[i] = nonUniformMutation(i, myCromo[i]);
+            double  x =  nonUniformMutation(i, generation);
+            this->setChromossomeAux(i , x);
         }
     }
-    this->setChromosome(myCromo);
-    free(myCromo);*/
+
 }
 
 /**
@@ -117,7 +116,7 @@ void Individual::iniChromossome()
     for (int i = 0; i < this->chromosomeSize; i++) {
         double x = uniformMutation(i);
         this->chromosome->setAllele(i, x);
-
+        this->setChromossomeAux(i, x);
     }
 }
 /**
@@ -139,8 +138,13 @@ void Individual::updateChromossome(){
 }
 
 void Individual::setChromossomeAux(int i, double val){
-    if(i<0 || i>=this->chromosomeSize) {
-        throw MyException("index out of boundaries", __FILE__, __LINE__);
-    }
-    this->chromosomeAUX[i] = val;
+    this->chromosomeAUX.at(i) = val;
+ }
+
+double Individual::getChromossomeAux(int i){
+    return this->chromosomeAUX.at(i) ;
+}
+
+double Individual::getFitness(){
+    return this->fitness;
 }

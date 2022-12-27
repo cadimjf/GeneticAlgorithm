@@ -52,6 +52,9 @@ private:
     double sumRank;
     void crossOver(int p1, int p2, int iInd);
     double crossOverBLXAlpha(double gene1, double gene2);
+    int partitionQckSort(int p, int r);
+    void quickSort( int p, int r);
+
 };
 
 

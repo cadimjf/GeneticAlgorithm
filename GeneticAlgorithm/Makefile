@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -Wall -fopenmp -O3 -std=c++11 -fopenmp
+CFLAGS = -Wall -O3
 LDFLAGS =
 OBJFILES = Random.o MyUtil.o Gene.o Chromosome.o Individual.o GeneticAlgorithm.o main.o
 TARGET = GA
