@@ -1,6 +1,6 @@
 #include <iostream>
 #include <vector>
-#include "GeneticAlgorithm.h"
+#include "GeneticAlgorithm/GeneticAlgorithm.h"
 using namespace std;
 
 double myFunction(double x, double y){

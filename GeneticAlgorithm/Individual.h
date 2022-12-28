@@ -9,9 +9,9 @@
 #include <time.h>       /* time */
 #include <iostream>
 #include <vector>
-#include "Random.h"
-#include "Chromosome.h"
-#include "MyUtil.h"
+#include "../Common/Random.h"
+#include "../Common/ParameterSet.h"
+#include "../Common/MyUtil.h"
 #if defined(__linux__)
 #define barra "/" // Debian, Ubuntu, Gentoo, Fedora, openSUSE, RedHat, Centos and other
 #else
@@ -48,7 +48,7 @@ private:
     double   delta(double y,int gen, int genMax,double b);
     default_random_engine individualRandomGenerator;
     vector<double> chromosomeAUX;
-    Chromosome *chromosome;
+    ParameterSet *chromosome;
     int chromosomeSize;
     int     id;
     double mutationProb;

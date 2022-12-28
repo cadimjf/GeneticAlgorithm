@@ -21,10 +21,10 @@ Individual::Individual(int i, double mutationProb, int cs, int mutType,
     this->mutType = mutType;
     this->function_ptr_fitness = func_ptr_fit;
     this->chromosomeSize = cs;
-    this->chromosome = new Chromosome(this->chromosomeSize, min, max);
+    this->chromosome = new ParameterSet(this->chromosomeSize, min, max);
     //initialize the aux chromossome with a copy from the chromossomes
     for (int i=0;i<this->chromosomeSize;i++){
-        this->chromosomeAUX.push_back(this->chromosome->getAllele(i));
+        this->chromosomeAUX.push_back(this->chromosome->getParameter(i));
     }
     this->fitness = 0.0;
     this->mutationProb = mutationProb;
@@ -61,8 +61,8 @@ int Individual::getId() {
  * @return
  */
 double Individual::uniformMutation(int i) {
-    return doubleRandom( this->chromosome->getMaxAllele(i),
-                         this->chromosome->getMinAllele(i),
+    return doubleRandom( this->chromosome->getMaxParameter(i),
+                         this->chromosome->getMinParameter(i),
                          &this->individualRandomGenerator);
 }
 
@@ -96,8 +96,8 @@ double Individual::nonUniformMutation(int i, int generation, int maxGeneration, 
     double gene = this->getGene(i);
     int theta = intRandom(0, 1, &this->individualRandomGenerator);
     double aux = (theta == 0) ?
-                 (this->chromosome->getMaxAllele(i) - gene) :
-                 (gene - this->chromosome->getMinAllele(i));
+                 (this->chromosome->getMaxParameter(i) - gene) :
+                 (gene - this->chromosome->getMinParameter(i));
     double d = delta(aux, generation, maxGeneration, b);
     double m = fabs(gene + d);
     return m;
@@ -135,7 +135,7 @@ void Individual::iniChromossome()
 {
     for (int i = 0; i < this->chromosomeSize; i++) {
         double x = uniformMutation(i);
-        this->chromosome->setAllele(i, x);
+        this->chromosome->setParameter(i, x);
         this->setChromossomeAux(i, x);
     }
 }
@@ -145,7 +145,7 @@ void Individual::iniChromossome()
  * @return
  */
 double Individual::getGene(int i){
-    return this->chromosome->getAllele(i);
+    return this->chromosome->getParameter(i);
 
 }
 /**
@@ -153,7 +153,7 @@ double Individual::getGene(int i){
  */
 void Individual::updateChromossome(){
     for (int i=0;i<this->chromosomeSize;i++){
-        this->chromosome->setAllele(i, this->chromosomeAUX[i]);
+        this->chromosome->setParameter(i, this->chromosomeAUX[i]);
     }
 }
 /**
@@ -196,7 +196,7 @@ void Individual::printInfo(){
     cout<<"ID: "<<this->getId()<<endl;
     cout<<"Chromossome: "<<endl;
     for (int i=0;i<this->chromosomeSize;i++){
-        cout<<this->chromosome->getAllele(i)<<" ";
+        cout<<this->chromosome->getParameter(i)<<" ";
     }
     cout<<endl;
 
