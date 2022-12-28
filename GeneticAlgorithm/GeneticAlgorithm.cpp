@@ -70,7 +70,8 @@ GeneticAlgorithm::GeneticAlgorithm(int chromoSize, int nPopulation, int gm, doub
         this->setAlpha(0.3);
         this->setMutationProb(0.05);
         this->setMutationB(3.0);
-        this->iniAlleleBoundaries();
+        this->iniChromosomeBoundaries();
+        this->setStopCriteria(0.0001);
         //used for rank selection - gives the sum of the position of all indivdual
         // 0 + 1 + 2 + ... + populationSize-1
         this->sumRank = (this->populationSize+1)*this->populationSize/2;
@@ -81,38 +82,38 @@ GeneticAlgorithm::GeneticAlgorithm(int chromoSize, int nPopulation, int gm, doub
 }
 GeneticAlgorithm::~GeneticAlgorithm(){
     this->population.clear();
-    this->maxAllele.clear();
-    this->maxAllele.clear();
+    this->maxChromosome.clear();
+    this->minChromosome.clear();
 }
 /**
  * set a max allele value for a specific gene (i)
  * @param i
  * @param val
  */
-void GeneticAlgorithm::setMaxAllele(int i, double val){
+void GeneticAlgorithm::setMaxChromosome(int i, double val){
     if(i<0 || i>=this->chromossomeSize) {
         throw MyException("index out of boundaries", __FILE__, __LINE__);
     }
-    this->maxAllele[i]= val;
+    this->maxChromosome[i]= val;
 }
 /**
  * set a min allele value for a specific gene (i)
  * @param i
  * @param val
  */
-void GeneticAlgorithm::setMinAllele(int i, double val){
+void GeneticAlgorithm::setMinChromosome(int i, double val){
     if(i<0 || i>=this->chromossomeSize) {
         throw MyException("index out of boundaries", __FILE__, __LINE__);
     }
-    this->minAllele[i]= val;
+    this->minChromosome[i]= val;
 }
 /**
  * sets a default boundary to each allele
  */
-void GeneticAlgorithm::iniAlleleBoundaries(){
+void GeneticAlgorithm::iniChromosomeBoundaries(){
     for(int i=0; i<this->chromossomeSize;i++){
-        this->minAllele.push_back(0.0);
-        this->maxAllele.push_back(1000.0);
+        this->minChromosome.push_back(0.0);
+        this->maxChromosome.push_back(1000.0);
     }
 }
 
@@ -205,9 +206,11 @@ void GeneticAlgorithm::generation(){
         //mutation
         this->population[i]->mutate(this->generationCurrent);
     }
-
-
 }
+/**
+ *
+ * @param i0
+ */
 void GeneticAlgorithm::computeFitness(int i0){
     for(int i=i0; i<this->populationSize; i++){
         this->population[i]->computeFitness();
@@ -230,27 +233,32 @@ void GeneticAlgorithm::evolution(){
             this->generation();
             //computes the fitness
             this->computeFitness(this->elite);
-
+            //if the best individual fitness is less than the stop criteria, stops
+            if(population[0]->getFitness()<=this->getStopCriteria()){
+                cout<<"Reached the stop criteria: "<<this->getStopCriteria()<<endl;
+                break;
+            }
             cout<<population[0]->getFitness()<<" "<<population[1]->getFitness()<<" ";
             cout<<population[2]->getFitness()<<" "<<population[3]->getFitness()<<" ";
             cout<<population[4]->getFitness()<<" "<<population[5]->getFitness()<<endl;
         }
-        cout<<"Finished evolution: "<<generationCurrent<<endl;
+        cout<<"Finished evolution on generation "<<generationCurrent<<endl;
+        population[0]->printInfo();
     }catch(MyException& caught){
         std::cout<<caught.getMessage()<<std::endl;
     }
 }
 /**
  * Starts the population with random numbers
- */
+ */ 
 void GeneticAlgorithm::iniPopulation(){
     for(int i=0; i<this->populationSize; i++)
     {
         this->population.push_back(new Individual(i,
                                              this->generationMax,
                                              this->mutationProb, this->mutationB,
-                                             this->populationSize, this->chromossomeSize,
-                                             this->minAllele, this->maxAllele, this->function_ptr_fitness));
+                                             this->chromossomeSize,
+                                             this->minChromosome, this->maxChromosome, this->function_ptr_fitness));
         this->population[i]->iniChromossome();
     }
 

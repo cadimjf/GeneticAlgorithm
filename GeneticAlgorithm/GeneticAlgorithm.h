@@ -22,11 +22,14 @@ public:
     void setMutationB(double);
     void setMutationProb(double);
     void evolution();
-    void setMinAllele(int i, double val);
-    void setMaxAllele(int i, double val);
+    void setMinChromosome(int i, double val);
+    void setMaxChromosome(int i, double val);
+    void setStopCriteria(double s){stopCriteria=s;}
+    double getStopCriteria(){return stopCriteria;}
 private:
+    double stopCriteria;
     double(*function_ptr_fitness)(vector<double>);
-    void iniAlleleBoundaries();
+    void iniChromosomeBoundaries();
     void iniPopulation();
     unsigned    agSeed;
     int         elite; //number of individuals kept in the next generation
@@ -45,8 +48,8 @@ private:
     double      mutationB;
     double      mutationProb;
     std::vector<Individual*> population;
-    std::vector<double> maxAllele;
-    std::vector<double> minAllele;
+    std::vector<double> maxChromosome;
+    std::vector<double> minChromosome;
     void computeFitness(int i0);
     int chromossomeSize;
     void generation();

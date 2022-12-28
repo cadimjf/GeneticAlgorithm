@@ -16,7 +16,7 @@
  * @param func_ptr_fit
  */
 Individual::Individual(int i, int generationMax, double mutationProb,
-                       double mutationB, int pS, int cs,
+                       double mutationB, int cs,
                        vector<double> min, vector<double> max, double(*func_ptr_fit)(vector<double>))
 {
     this->function_ptr_fitness = func_ptr_fit;
@@ -26,13 +26,12 @@ Individual::Individual(int i, int generationMax, double mutationProb,
     for (int i=0;i<this->chromosomeSize;i++){
         this->chromosomeAUX.push_back(this->chromosome->getAllele(i));
     }
-    this->populationSize = pS;
     this->b = mutationB;
     this->maxGeneration = generationMax;
     this->fitness = 0.0;
     this->mutationProb = mutationProb;
 
-    this->id = id;
+    this->id = i;
     //o seed é a hora do relógio + o id do indíviduo + 1. Se tirar o um, o seed do indivíduo 0 fica igual ao global
     unsigned seed = chrono::system_clock::now().time_since_epoch().count()+id+1;
     //starts my random generator with the seed
@@ -174,5 +173,16 @@ void Individual::computeFitness(){
     //After applying all genetic operation in the generation,
     //puts the new genes in the individual chromosome
     this->updateChromossome();
+
+}
+
+void Individual::printInfo(){
+    cout<<"Fitness: "<<this->getFitness()<<endl;
+    cout<<"ID: "<<this->getId()<<endl;
+    cout<<"Chromossome: "<<endl;
+    for (int i=0;i<this->chromosomeSize;i++){
+        cout<<this->chromosome->getAllele(i)<<" ";
+    }
+    cout<<endl;
 
 }

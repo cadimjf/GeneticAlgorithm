@@ -17,13 +17,12 @@ int main() {
     GeneticAlgorithm *ga = new GeneticAlgorithm(2, 50, 100, function_ptr);
     //ga->setMutationProb(0.1);
     ga->setElite(2);
-    std::cout << "Hello, World!er" << std::endl;
-    ga->setMaxAllele(0, 100);
-    //ga->setMinAllele(1, 100);
-    ga->setMaxAllele(1, 100);
+    ga->setMaxChromosome(0, 100);
+    //ga->setMinChromosome(1, 100);
+    ga->setMaxChromosome(1, 100);
     ga->evolution();
     delete(ga);
-    cout<<"apaguei memo"<<endl;
+    cout<<"FIM"<<endl;
     return 0;
 }
 
