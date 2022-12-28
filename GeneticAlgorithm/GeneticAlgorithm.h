@@ -19,9 +19,7 @@ public:
     void setAlpha(double);
     void setMutationB(double);
     void setMutationProb(double);
-    void evolution();
-    void setStopCriteria(double s){stopCriteria=s;}
-    double getStopCriteria(){return stopCriteria;}
+    void search();
     void setMutationNonUniform();
     void setMutationUniform();
     void setSelectionRouletteWheel();
@@ -30,18 +28,13 @@ public:
 private:
     int mutationType;
     int selectionType;
-    double stopCriteria;
+
     void iniPopulation();
 
     int         elite; //number of individuals kept in the next generation
     int         populationSize;
-    int         generationCurrent;
-    int         generationMax;
-
     double      sumFit;
-    double      avgFitness;
 
-    default_random_engine agRandomGenerator;
     double      crossOverProb;
     double      alpha;
     double      mutationB;

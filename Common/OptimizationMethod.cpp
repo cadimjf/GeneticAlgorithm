@@ -8,10 +8,16 @@
  * @param paramSetSize
  * @param eval_function
  */
-OptimizationMethod::OptimizationMethod(int paramSetSize, double(*eval_function)(vector<double>)) {
+using namespace std;
+OptimizationMethod::OptimizationMethod(int paramSetSize, int iterationsNumber, double(*eval_function)(vector<double>)) {
     this->parameterSetSize      = paramSetSize;
     this->evaluation_function   = eval_function;
+    this->iterationsNumber = iterationsNumber;
     this->iniParameterSetBoundaries();
+    unsigned seed = chrono::system_clock::now().time_since_epoch().count();
+    //starts my random generator with the seed
+    std::default_random_engine gen(seed);
+    this->randomGenerator = gen;
 }
 /**
  *

@@ -1,6 +1,8 @@
 #include <iostream>
 #include <vector>
 #include "GeneticAlgorithm/GeneticAlgorithm.h"
+#include "HillClimbing/HillClimbing.h"
+
 using namespace std;
 
 double myFunction(double x, double y){
@@ -22,9 +24,12 @@ int main() {
     //ga->setMinParameter(1, 100);
     ga->setMaxParameter(1, 100);
     ga->setStopCriteria(0.0003);
-    ga->evolution();
+    ga->search();
     delete(ga);
-    cout<<"FIM"<<endl;
+    cout<<"FIM AG"<<endl;
+    HillClimbing *hc = new HillClimbing(2, 1000, function_ptr);
+    hc->setNoise(0.1);
+    hc->search();
     return 0;
 }
 

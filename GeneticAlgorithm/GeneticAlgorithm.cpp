@@ -1,67 +1,20 @@
 //
 // Created by ricar on 26/12/2022.
 //
-
 #include "GeneticAlgorithm.h"
-using namespace std;
-/**
- * Sets the elite size - the number of individuals kept to the next generation
- * @param e
- */
-void GeneticAlgorithm::setElite(int e){
-    this->elite = e;
-}
-
-/**
- * Sets the probability of crossover
- * @param cop
- */
-void GeneticAlgorithm::setCrossOverProb(double cop){
-    this->crossOverProb = cop;
-}
-
-/**
- * set the alpha parameter to the BLX-alpha crossver
- * @param a
- */
-void GeneticAlgorithm::setAlpha(double a){
-    this->alpha = a;
-}
-/**
- * The b parameter of non-uniform mutation,
- * the parameter of delta calculation
- * @param mb
- */
-void GeneticAlgorithm::setMutationB(double mb){
-    this->mutationB = mb;
-}
-/**
- * The mutation probability
- * @param mp
- */
-void GeneticAlgorithm::setMutationProb(double mp){
-    this->mutationProb = mp;
-}
 
 /**
  * The genetic algorithm constructor
  * @param nPopulation
  * @param gm
  */
-GeneticAlgorithm::GeneticAlgorithm(int chromoSize, int nPopulation, int gm, double(*function_ptr_fitness)(vector<double>) ):
-        OptimizationMethod(chromoSize, function_ptr_fitness)
+GeneticAlgorithm::GeneticAlgorithm(int chromoSize, int nPopulation, int genNumber, double(*function_ptr_fitness)(vector<double>) ):
+        OptimizationMethod(chromoSize, genNumber, function_ptr_fitness)
 {
     try {
         this->populationSize = nPopulation;
-        this->avgFitness = 0.0;
         this->sumFit = 0.0;
-
-        unsigned seed = chrono::system_clock::now().time_since_epoch().count();
-        this->generationCurrent=0;
-        //starts my random generator with the seed
-        default_random_engine gen(seed);
-        this->agRandomGenerator = gen;
-        this->generationMax = gm;
+        this->iterationCurrent=0;
         this->setElite(4);
         this->setCrossOverProb(0.95);
         this->setAlpha(0.3);
@@ -84,7 +37,7 @@ GeneticAlgorithm::~GeneticAlgorithm(){
 
 int GeneticAlgorithm::rouletteWheelSelection(int forbidenGuy=-1){
     //numero da sorte, para escolher o individuo atraves de roleta
-    double myLuckNumber = doubleRandom(0.0, this->sumFit, &this->agRandomGenerator);
+    double myLuckNumber = doubleRandom(0.0, this->sumFit, &this->randomGenerator);
     double sumFitness=0.0, myFitness=0.0;
     int selectedParent=-1;
     for(int i=0; i<this->populationSize; i++){
@@ -113,7 +66,7 @@ int GeneticAlgorithm::rouletteWheelSelection(int forbidenGuy=-1){
  */
 int GeneticAlgorithm::rankSelection(int forbidenGuy=-1){
     //numero da sorte, para escolher o individuo atraves de roleta
-    double myLuckNumber = doubleRandom(0.0, this->sumRank, &this->agRandomGenerator);
+    double myLuckNumber = doubleRandom(0.0, this->sumRank, &this->randomGenerator);
     double sumRank=0.0;
     int selectedParent=-1;
     for(int i=0; i<this->populationSize; i++){
@@ -148,7 +101,7 @@ double GeneticAlgorithm::crossOverBLXAlpha(double gene1, double gene2)
         cMin=gene1;
     }
     iMaxMin = cMax-cMin;
-    return doubleRandom(cMin-iMaxMin*this->alpha, cMax+iMaxMin*this->alpha, &this->agRandomGenerator);
+    return doubleRandom(cMin-iMaxMin*this->alpha, cMax+iMaxMin*this->alpha, &this->randomGenerator);
 
 }
 
@@ -160,7 +113,7 @@ double GeneticAlgorithm::crossOverBLXAlpha(double gene1, double gene2)
  */
 void GeneticAlgorithm::crossOver(int p1, int p2, int iInd)
 {
-    double myLuckyNumber = doubleRandom(0.0, 1.0, &this->agRandomGenerator);
+    double myLuckyNumber = doubleRandom(0.0, 1.0, &this->randomGenerator);
 ///if the parents are the same or the crossover is not done
     if(p1==p2 || myLuckyNumber > this->crossOverProb){
         //it does not perform crossver, the new genes are kept the same of the previous interaction
@@ -198,7 +151,7 @@ void GeneticAlgorithm::generation(){
         //create a new guy from crossover
         this->crossOver(parent1, parent2, i);
         //mutation
-        this->population[i]->mutate(this->generationCurrent, this->generationMax, this->mutationB);
+        this->population[i]->mutate(this->iterationCurrent, this->iterationsNumber, this->mutationB);
     }
 }
 /**
@@ -219,12 +172,12 @@ void GeneticAlgorithm::computeFitness(int i0){
  *
  * Performs the population evolution
  */
-void GeneticAlgorithm::evolution(){
+void GeneticAlgorithm::search(){
     try{
         this->iniPopulation();
         //compute fitness with the initial populations
         this->computeFitness(0);
-        for(generationCurrent=1;generationCurrent<=generationMax;generationCurrent++){
+        for(iterationCurrent=1;iterationCurrent<=iterationsNumber;iterationCurrent++){
             //performs the crossovers and mutations
             this->generation();
             //computes the fitness
@@ -234,11 +187,8 @@ void GeneticAlgorithm::evolution(){
                 cout<<"Reached the stop criteria: "<<this->getStopCriteria()<<endl;
                 break;
             }
-            cout<<population[0]->getFitness()<<" "<<population[1]->getFitness()<<" ";
-            cout<<population[2]->getFitness()<<" "<<population[3]->getFitness()<<" ";
-            cout<<population[4]->getFitness()<<" "<<population[5]->getFitness()<<endl;
         }
-        cout<<"Finished evolution on generation "<<generationCurrent<<endl;
+        cout<<"Finished evolution on generation "<<iterationCurrent<<endl;
         population[0]->printInfo();
     }catch(MyException& caught){
         std::cout<<caught.getMessage()<<std::endl;
@@ -314,4 +264,43 @@ void GeneticAlgorithm::setSelectionRouletteWheel(){
 }
 void GeneticAlgorithm::setSelectionRank(){
     this->selectionType = SELECTION_RANK;
+}
+
+/**
+ * Sets the elite size - the number of individuals kept to the next generation
+ * @param e
+ */
+void GeneticAlgorithm::setElite(int e){
+    this->elite = e;
+}
+
+/**
+ * Sets the probability of crossover
+ * @param cop
+ */
+void GeneticAlgorithm::setCrossOverProb(double cop){
+    this->crossOverProb = cop;
+}
+
+/**
+ * set the alpha parameter to the BLX-alpha crossver
+ * @param a
+ */
+void GeneticAlgorithm::setAlpha(double a){
+    this->alpha = a;
+}
+/**
+ * The b parameter of non-uniform mutation,
+ * the parameter of delta calculation
+ * @param mb
+ */
+void GeneticAlgorithm::setMutationB(double mb){
+    this->mutationB = mb;
+}
+/**
+ * The mutation probability
+ * @param mp
+ */
+void GeneticAlgorithm::setMutationProb(double mp){
+    this->mutationProb = mp;
 }
