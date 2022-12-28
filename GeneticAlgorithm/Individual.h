@@ -23,7 +23,7 @@ using namespace std;
 class Individual : public ParameterSet{
 public:
     Individual(int i, double mutationProb,  int cs, int mutType,
-               vector<double> min, vector<double> max, double(*func_fit)(vector<double>));
+               double(*func_fit)(vector<double>));
     ~Individual();
     void  mutate(int gen, int genMax,double b);
 
@@ -31,6 +31,7 @@ public:
     double getFitness();
     void computeFitness();
     void printInfo();
+
 private:
     int mutType;
     double   fitness;

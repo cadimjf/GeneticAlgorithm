@@ -13,6 +13,8 @@ public:
     void search();
     void setNoise(double n){noise=n;};
     double getNoise(){return noise;};
+    void setMaxParameter(int i, double val);
+    void setMinParameter(int i, double val);
 private:
     double noise;
     ParameterSet *paramSet;

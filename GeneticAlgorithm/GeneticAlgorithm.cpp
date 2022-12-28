@@ -28,6 +28,13 @@ GeneticAlgorithm::GeneticAlgorithm(int chromoSize, int nPopulation, int genNumbe
         // 0 + 1 + 2 + ... + populationSize-1
         this->sumRank = (this->populationSize+1)*this->populationSize/2;
         this->setMutationNonUniform();
+        for(int i=0; i<this->populationSize; i++) {
+            this->population.push_back(new Individual(i,
+                                                      this->mutationProb,
+                                                      this->getParameterSetSize(),
+                                                      this->mutationType,
+                                                      this->evaluation_function));
+        }
     }catch(MyException& caught){
         std::cout<<caught.getMessage()<<std::endl;
     }
@@ -179,8 +186,7 @@ void GeneticAlgorithm::computeFitness(int i0){
 void GeneticAlgorithm::search(){
     try{
         this->iniPopulation();
-        //compute fitness with the initial populations
-        this->computeFitness(0);
+
         for(iterationCurrent=1;iterationCurrent<=iterationsNumber;iterationCurrent++){
             //performs the crossovers and mutations
             this->generation();
@@ -204,14 +210,10 @@ void GeneticAlgorithm::search(){
 void GeneticAlgorithm::iniPopulation(){
     for(int i=0; i<this->populationSize; i++)
     {
-        this->population.push_back(new Individual(i,
-                                            this->mutationProb,
-                                            this->getParameterSetSize(),
-                                            this->mutationType,
-                                            this->getMinParameterSet(), this->getMaxParameterSet(), this->evaluation_function));
         this->population[i]->iniParameters();
     }
-
+    //compute fitness with the initial populations
+    this->computeFitness(0);
 }
 /**
  * The partition function
@@ -307,4 +309,16 @@ void GeneticAlgorithm::setMutationB(double mb){
  */
 void GeneticAlgorithm::setMutationProb(double mp){
     this->mutationProb = mp;
+}
+
+void GeneticAlgorithm::setMaxParameter(int i, double val){
+    for(int j=0;j<populationSize;j++){
+        this->population[j]->setMaxParameter(i, val);
+    }
+}
+void GeneticAlgorithm::setMinParameter(int i, double val){
+    for(int j=0;j<populationSize;j++){
+        this->population[j]->setMinParameter(i, val);
+    }
+
 }

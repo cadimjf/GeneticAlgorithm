@@ -24,7 +24,8 @@ public:
     void setMutationUniform();
     void setSelectionRouletteWheel();
     void setSelectionRank();
-
+    void setMaxParameter(int i, double val);
+    void setMinParameter(int i, double val);
 private:
     int mutationType;
     int selectionType;

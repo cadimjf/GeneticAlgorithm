@@ -9,13 +9,13 @@
  * @param min
  * @param max
  */
-ParameterSet::ParameterSet(int id, int numPar, vector<double> min, vector<double> max, double(*eval_func)(vector<double>) ){
+ParameterSet::ParameterSet(int id, int numPar, double(*eval_func)(vector<double>) ){
     this->id = id;
     this->eval_function =eval_func;
     this->parametersNum = numPar;
     //create parameters set
     for(int i =0; i<this->parametersNum; i++){
-        Parameter *p = new Parameter(min[i], max[i]);
+        Parameter *p = new Parameter(0.0, 100.0);
         this->parameters.push_back(p);
         //initialize the aux parameters set with a copy from the parameters
         this->parametersAUX.push_back(this->parameters.at(i)->getParameter());
@@ -105,9 +105,12 @@ void ParameterSet::updateParameters(){
  * @return
  */
 double ParameterSet::generateRandomParameter(int i){
-    return doubleRandom( this->getMaxParameter(i),
-                         this->getMinParameter(i),
-                         &this->randomGenerator);
+    return this->getRandomDouble(   this->getMinParameter(i),
+                                    this->getMaxParameter(i));
+}
+
+double ParameterSet::getRandomDouble(double min, double max){
+    return doubleRandom( min, max, &this->randomGenerator);
 }
 
 /**
@@ -124,4 +127,21 @@ void ParameterSet::iniParameters()
 
 double ParameterSet::evaluate(){
     return this->eval_function(this->parametersAUX);
+}
+
+void ParameterSet::print(){
+    cout<<"Parameter set: "<<endl;
+    for (int i=0;i<this->getParametersNum();i++){
+        cout<<this->getParameter(i)<<" ";
+    }
+    cout<<endl;
+}
+
+
+void ParameterSet::setMaxParameter(int i, double val){
+    this->parameters.at(i)->setMaxParameter(val);
+}
+
+void ParameterSet::setMinParameter(int i, double val){
+    this->parameters.at(i)->setMinParameter(val);
 }

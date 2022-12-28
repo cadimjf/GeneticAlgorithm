@@ -18,20 +18,12 @@ class OptimizationMethod {
 public:
     OptimizationMethod(int paramSetSize, int iterationsNumber, double(*eval_function)(vector<double>));
     ~OptimizationMethod();
-    void iniParameterSetBoundaries();
-    void setMinParameter(int i, double val);
-    void setMaxParameter(int i, double val);
     int getParameterSetSize();
-    vector<double> getMinParameterSet(){return minParameterSet;};
-    vector<double> getMaxParameterSet(){return maxParameterSet;};
     virtual void search()=0;
     void setStopCriteria(double s){stopCriteria=s;}
     double getStopCriteria(){return stopCriteria;}
  private:
-    std::vector<double> maxParameterSet;
-    std::vector<double> minParameterSet;
     int parameterSetSize;
-
 
 protected:
     double stopCriteria;

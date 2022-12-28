@@ -14,7 +14,7 @@
  * @param func_ptr_fit
  */
 Individual::Individual(int id, double mutationProb, int cs, int mutType,
-                       vector<double> min, vector<double> max, double(*fit_function)(vector<double>)):ParameterSet(id, cs, min,max, fit_function)
+                       double(*fit_function)(vector<double>)):ParameterSet(id, cs, fit_function)
 {
     this->mutType = mutType;
     this->fitness = 0.0;
@@ -34,7 +34,7 @@ Individual::~Individual() {
  * @return
  */
 double Individual::uniformMutation(int i) {
-    this->generateRandomParameter(i);
+    return this->generateRandomParameter(i);
 }
 
 /**
@@ -43,7 +43,7 @@ double Individual::uniformMutation(int i) {
  * @return
  */
 double Individual::delta(double y, int generation, int maxGeneration, double b) {
-    double r = doubleRandom(0.0, 1.0, &this->randomGenerator);
+    double r = this->getRandomDouble(0.0, 1.0);
     return y * (1.0 - powf(r, powf(1.0 - double(generation) / double(maxGeneration), b)));
 }
 
@@ -81,7 +81,7 @@ void Individual::mutate(int generation=0, int maxGeneration=0, double b=0.0) {
 
     for (int i = 0; i < this->getParametersNum(); i++) {
         //generate a random number
-        double myDice = doubleRandom(0.0, 1.0, &this->randomGenerator);
+        double myDice = this->getRandomDouble(0.0, 1.0);
         //check my random number with mutation probability
         if (myDice<this->mutationProb) {
             double newGene;
@@ -133,9 +133,6 @@ void Individual::printInfo(){
     cout<<"Fitness: "<<this->getFitness()<<endl;
     cout<<"ID: "<<this->getId()<<endl;
     cout<<"Chromossome: "<<endl;
-    for (int i=0;i<this->getParametersNum();i++){
-        cout<<this->getParameter(i)<<" ";
-    }
-    cout<<endl;
+    this->print();
 
 }
