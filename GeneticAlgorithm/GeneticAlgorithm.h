@@ -24,8 +24,12 @@ public:
     double getStopCriteria(){return stopCriteria;}
     void setMutationNonUniform();
     void setMutationUniform();
+    void setSelectionRouletteWheel();
+    void setSelectionRank();
+
 private:
     int mutationType;
+    int selectionType;
     double stopCriteria;
     void iniPopulation();
 
@@ -48,6 +52,7 @@ private:
 
     void generation();
     int rankSelection(int forbidenGuy);
+    int rouletteWheelSelection(int forbidenGuy);
     double sumRank;
     void crossOver(int p1, int p2, int iInd);
     double crossOverBLXAlpha(double gene1, double gene2);

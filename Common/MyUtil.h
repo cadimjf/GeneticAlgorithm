@@ -15,6 +15,10 @@ using namespace std;
 
 #define MUTATION_UNIFORM 0
 #define MUTATION_NONUNIFORM 1
+
+#define SELECTION_ROULETTEWHELL 0
+#define SELECTION_RANK 1
+
 struct MyException : public std::exception
 {
     std::string msg;

@@ -13,7 +13,9 @@ OptimizationMethod::OptimizationMethod(int paramSetSize, double(*eval_function)(
     this->evaluation_function   = eval_function;
     this->iniParameterSetBoundaries();
 }
-
+/**
+ *
+ */
 OptimizationMethod::~OptimizationMethod() {
     this->maxParameterSet.clear();
     this->minParameterSet.clear();

@@ -68,6 +68,7 @@ GeneticAlgorithm::GeneticAlgorithm(int chromoSize, int nPopulation, int gm, doub
         this->setMutationProb(0.05);
         this->setMutationB(3.0);
         this->setStopCriteria(0.0001);
+        this->setSelectionRank();
         //used for rank selection - gives the sum of the position of all indivdual
         // 0 + 1 + 2 + ... + populationSize-1
         this->sumRank = (this->populationSize+1)*this->populationSize/2;
@@ -81,6 +82,28 @@ GeneticAlgorithm::~GeneticAlgorithm(){
 
 }
 
+int GeneticAlgorithm::rouletteWheelSelection(int forbidenGuy=-1){
+    //numero da sorte, para escolher o individuo atraves de roleta
+    double myLuckNumber = doubleRandom(0.0, this->sumFit, &this->agRandomGenerator);
+    double sumFitness=0.0, myFitness=0.0;
+    int selectedParent=-1;
+    for(int i=0; i<this->populationSize; i++){
+        myFitness = this->population[i]->getFitness();
+        sumFitness += (this->sumFit - myFitness);
+        if(sumFitness>=myLuckNumber  && forbidenGuy!=i){//we found our guy
+            selectedParent= i;
+            break;
+        }
+    }
+    if(selectedParent==-1)
+        //If we got here, no one was select. Exception!
+        throw MyException("No one was selected.", __FILE__, __LINE__);
+    else
+        return selectedParent;
+}
+
+
+
 /**
  * Select one individual for reproductions
  *  Rank selection
@@ -88,7 +111,7 @@ GeneticAlgorithm::~GeneticAlgorithm(){
   * -1 indicates anyone can be choosen
  * @return
  */
-int GeneticAlgorithm::rankSelection(int forbidenGuy){
+int GeneticAlgorithm::rankSelection(int forbidenGuy=-1){
     //numero da sorte, para escolher o individuo atraves de roleta
     double myLuckNumber = doubleRandom(0.0, this->sumRank, &this->agRandomGenerator);
     double sumRank=0.0;
@@ -162,8 +185,16 @@ void GeneticAlgorithm::generation(){
     for(int i=this->elite; i<this->populationSize; i++)
     {
         //Selecione 2 pais em P
-        int parent1 = this->rankSelection(-1);//-1 means we can choose any parent
-        int parent2 = this->rankSelection(parent1); //chose anyone but the first parent again
+        int parent1, parent2;
+        if(this->selectionType == SELECTION_RANK) {
+            parent1 = this->rankSelection(-1);//-1 means we can choose any parent
+            parent2 = this->rankSelection(parent1); //chose anyone but the first parent again
+        }else if(this->selectionType == SELECTION_ROULETTEWHELL){
+            parent1 = this->rouletteWheelSelection(-1);//-1 means we can choose any parent
+            parent2 = this->rouletteWheelSelection(parent1); //chose anyone but the first parent again
+        }else{
+            throw MyException("Invalid selection type! ", __FILE__, __LINE__);
+        }
         //create a new guy from crossover
         this->crossOver(parent1, parent2, i);
         //mutation
@@ -175,8 +206,10 @@ void GeneticAlgorithm::generation(){
  * @param i0
  */
 void GeneticAlgorithm::computeFitness(int i0){
+    this->sumFit = 0.0;
     for(int i=i0; i<this->populationSize; i++){
         this->population[i]->computeFitness();
+        this->sumFit += this->population[i]->getFitness();
     }
     //orders the population according to the fitness
     this->quickSort(0, this->populationSize-1);
@@ -276,3 +309,9 @@ void GeneticAlgorithm::setMutationUniform(){
     this->mutationType = MUTATION_UNIFORM;
 }
 
+void GeneticAlgorithm::setSelectionRouletteWheel(){
+    this->selectionType = SELECTION_ROULETTEWHELL;
+}
+void GeneticAlgorithm::setSelectionRank(){
+    this->selectionType = SELECTION_RANK;
+}

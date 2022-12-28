@@ -119,7 +119,7 @@ void Individual::mutate(int generation=0, int maxGeneration=0, double b=0.0) {
             }else if(mutType==MUTATION_UNIFORM){
                 newGene = uniformMutation(i);
             }else{
-                throw MyException("Invalid mutation type! "+mutType, __FILE__, __LINE__);
+                throw MyException("Invalid mutation type! ", __FILE__, __LINE__);
             }
 
             this->setChromossomeAux(i , newGene);
