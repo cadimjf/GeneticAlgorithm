@@ -47,6 +47,7 @@ private:
     std::vector<Individual*> population;
     std::vector<double> maxAllele;
     std::vector<double> minAllele;
+    void computeFitness(int i0);
     int chromossomeSize;
     void generation();
     int rankSelection(int forbidenGuy);

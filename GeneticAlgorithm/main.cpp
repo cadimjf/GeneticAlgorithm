@@ -16,7 +16,7 @@ int main() {
     //(*function_ptr)()
     GeneticAlgorithm *ga = new GeneticAlgorithm(2, 50, 100, function_ptr);
     //ga->setMutationProb(0.1);
-    ga->setElite(0);
+    ga->setElite(2);
     std::cout << "Hello, World!er" << std::endl;
     ga->setMaxAllele(0, 100);
     //ga->setMinAllele(1, 100);

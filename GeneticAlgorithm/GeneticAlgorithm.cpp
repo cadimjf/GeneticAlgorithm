@@ -208,6 +208,14 @@ void GeneticAlgorithm::generation(){
 
 
 }
+void GeneticAlgorithm::computeFitness(int i0){
+    for(int i=i0; i<this->populationSize; i++){
+        this->population[i]->computeFitness();
+    }
+    //orders the population according to the fitness
+    this->quickSort(0, this->populationSize-1);
+}
+
 /**
  *
  * Performs the population evolution
@@ -215,16 +223,17 @@ void GeneticAlgorithm::generation(){
 void GeneticAlgorithm::evolution(){
     try{
         this->iniPopulation();
+        //compute fitness with the initial populations
+        this->computeFitness(0);
         for(generationCurrent=1;generationCurrent<=generationMax;generationCurrent++){
             //performs the crossovers and mutations
             this->generation();
             //computes the fitness
-            for(int i=this->elite; i<this->populationSize; i++){
-                this->population[i]->computeFitness();
-            }
-            //orders the population according to the fitness
-            this->quickSort(0, this->populationSize-1);
-            cout<<population[0]->getFitness()<<" "<<population[1]->getFitness()<<endl;
+            this->computeFitness(this->elite);
+
+            cout<<population[0]->getFitness()<<" "<<population[1]->getFitness()<<" ";
+            cout<<population[2]->getFitness()<<" "<<population[3]->getFitness()<<" ";
+            cout<<population[4]->getFitness()<<" "<<population[5]->getFitness()<<endl;
         }
         cout<<"Finished evolution: "<<generationCurrent<<endl;
     }catch(MyException& caught){
