@@ -14,12 +14,14 @@ double myFitness(vector<double> param){
 int main() {
     double (*function_ptr)(vector<double>) = &myFitness;
     //(*function_ptr)()
-    GeneticAlgorithm *ga = new GeneticAlgorithm(2, 50, 100, function_ptr);
-    //ga->setMutationProb(0.1);
+    GeneticAlgorithm *ga = new GeneticAlgorithm(2, 50, 1000, function_ptr);
+    //ga->setMutationUniform();
     ga->setElite(2);
+    //ga->setMutationProb(0.1);
     ga->setMaxChromosome(0, 100);
     //ga->setMinChromosome(1, 100);
     ga->setMaxChromosome(1, 100);
+    ga->setStopCriteria(0.);
     ga->evolution();
     delete(ga);
     cout<<"FIM"<<endl;
