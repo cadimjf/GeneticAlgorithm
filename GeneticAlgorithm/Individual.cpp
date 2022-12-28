@@ -15,10 +15,10 @@
  * @param max
  * @param func_ptr_fit
  */
-Individual::Individual(int i, int generationMax, double mutationProb,
-                       double mutationB, int cs,
+Individual::Individual(int i, double mutationProb, int cs, int mutType,
                        vector<double> min, vector<double> max, double(*func_ptr_fit)(vector<double>))
 {
+    this->mutType = mutType;
     this->function_ptr_fitness = func_ptr_fit;
     this->chromosomeSize = cs;
     this->chromosome = new Chromosome(this->chromosomeSize, min, max);
@@ -26,8 +26,6 @@ Individual::Individual(int i, int generationMax, double mutationProb,
     for (int i=0;i<this->chromosomeSize;i++){
         this->chromosomeAUX.push_back(this->chromosome->getAllele(i));
     }
-    this->b = mutationB;
-    this->maxGeneration = generationMax;
     this->fitness = 0.0;
     this->mutationProb = mutationProb;
 
@@ -73,9 +71,9 @@ double Individual::uniformMutation(int i) {
  * @param y
  * @return
  */
-double Individual::delta(double y, int generation) {
+double Individual::delta(double y, int generation, int maxGeneration, double b) {
     double r = doubleRandom(0.0, 1.0, &this->individualRandomGenerator);
-    return y * (1.0 - powf(r, powf(1.0 - double(generation) / double(this->maxGeneration), this->b)));
+    return y * (1.0 - powf(r, powf(1.0 - double(generation) / double(maxGeneration), b)));
 }
 
 /**
@@ -84,14 +82,23 @@ double Individual::delta(double y, int generation) {
  * @param geneLowerBound
  * @param geneUpperBound
  */
-double Individual::nonUniformMutation(int i, int generation) {
+double Individual::nonUniformMutation(int i, int generation, int maxGeneration, double b) {
+    if(generation==0 ){
+        throw MyException("To use non uniform mutation, you have to inform the generation! ", __FILE__, __LINE__);
+    }
+    if(maxGeneration==0){
+        throw MyException("To use non uniform mutation, you have to inform the max generation!", __FILE__, __LINE__);
+    }
+    if(fabs(b)<1.0e-8){
+        throw MyException("To use non uniform mutation, you have to inform b parameter! call setMutationB or setMutationUniform() to use uniform mutation", __FILE__, __LINE__);
+    }
 
     double gene = this->getGene(i);
     int theta = intRandom(0, 1, &this->individualRandomGenerator);
     double aux = (theta == 0) ?
                  (this->chromosome->getMaxAllele(i) - gene) :
                  (gene - this->chromosome->getMinAllele(i));
-    double d = delta(aux, generation);
+    double d = delta(aux, generation, maxGeneration, b);
     double m = fabs(gene + d);
     return m;
 
@@ -99,15 +106,23 @@ double Individual::nonUniformMutation(int i, int generation) {
 /***
  *
  */
-void Individual::mutate(int generation) {
+void Individual::mutate(int generation=0, int maxGeneration=0, double b=0.0) {
 
     for (int i = 0; i < this->chromosomeSize; i++) {
         //generate a random number
         double myDice = doubleRandom(0.0, 1.0, &this->individualRandomGenerator);
         //check my random number with mutation probability
         if (myDice<this->mutationProb) {
-            double  x =  nonUniformMutation(i, generation);
-            this->setChromossomeAux(i , x);
+            double newGene;
+            if(mutType==MUTATION_NONUNIFORM){
+                newGene = nonUniformMutation(i, generation, maxGeneration, b);
+            }else if(mutType==MUTATION_UNIFORM){
+                newGene = uniformMutation(i);
+            }else{
+                throw MyException("Invalid mutation type! "+mutType, __FILE__, __LINE__);
+            }
+
+            this->setChromossomeAux(i , newGene);
         }
     }
 

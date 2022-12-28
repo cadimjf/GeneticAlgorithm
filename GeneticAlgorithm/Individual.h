@@ -22,11 +22,11 @@ using namespace std;
 
 class Individual {
 public:
-    Individual(int i, int generationMax, double mutationProb, double mutationB, int cs,
+    Individual(int i, double mutationProb,  int cs, int mutType,
                vector<double> min, vector<double> max, double(*func_ptr_fit)(vector<double>));
     virtual ~Individual();
 
-    void  mutate(int gen);
+    void  mutate(int gen, int genMax,double b);
     void    setGeneration(int);
     int     getId();
     void    iniChromossome();
@@ -40,18 +40,17 @@ public:
     void computeFitness();
     void printInfo();
 private:
+    int mutType;
     double   fitness;
     double(*function_ptr_fitness)(vector<double>);
     double  uniformMutation(int i);
-    double   nonUniformMutation(int i, int gen);
-    double   delta(double y,int gen);
+    double   nonUniformMutation(int i, int gen, int genMax,double b);
+    double   delta(double y,int gen, int genMax,double b);
     default_random_engine individualRandomGenerator;
     vector<double> chromosomeAUX;
     Chromosome *chromosome;
     int chromosomeSize;
     int     id;
-    double   b;
-    int     maxGeneration;
     double mutationProb;
 
 

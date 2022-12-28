@@ -75,7 +75,7 @@ GeneticAlgorithm::GeneticAlgorithm(int chromoSize, int nPopulation, int gm, doub
         //used for rank selection - gives the sum of the position of all indivdual
         // 0 + 1 + 2 + ... + populationSize-1
         this->sumRank = (this->populationSize+1)*this->populationSize/2;
-
+        this->setMutationNonUniform();
     }catch(MyException& caught){
         std::cout<<caught.getMessage()<<std::endl;
     }
@@ -204,7 +204,7 @@ void GeneticAlgorithm::generation(){
         //create a new guy from crossover
         this->crossOver(parent1, parent2, i);
         //mutation
-        this->population[i]->mutate(this->generationCurrent);
+        this->population[i]->mutate(this->generationCurrent, this->generationMax, this->mutationB);
     }
 }
 /**
@@ -255,9 +255,9 @@ void GeneticAlgorithm::iniPopulation(){
     for(int i=0; i<this->populationSize; i++)
     {
         this->population.push_back(new Individual(i,
-                                             this->generationMax,
-                                             this->mutationProb, this->mutationB,
+                                             this->mutationProb,
                                              this->chromossomeSize,
+                                             this->mutationType,
                                              this->minChromosome, this->maxChromosome, this->function_ptr_fitness));
         this->population[i]->iniChromossome();
     }
@@ -303,3 +303,13 @@ void GeneticAlgorithm::quickSort( int p, int r)
         quickSort(j+1, r);
     }
 }
+/**
+ *
+ */
+void GeneticAlgorithm::setMutationNonUniform(){
+    this->mutationType = MUTATION_NONUNIFORM;
+}
+void GeneticAlgorithm::setMutationUniform(){
+    this->mutationType = MUTATION_UNIFORM;
+}
+

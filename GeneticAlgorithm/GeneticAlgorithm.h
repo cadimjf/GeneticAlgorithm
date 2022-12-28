@@ -26,7 +26,11 @@ public:
     void setMaxChromosome(int i, double val);
     void setStopCriteria(double s){stopCriteria=s;}
     double getStopCriteria(){return stopCriteria;}
+    void setMutationNonUniform();
+    void setMutationUniform();
 private:
+    int mutationType;
+
     double stopCriteria;
     double(*function_ptr_fitness)(vector<double>);
     void iniChromosomeBoundaries();
