@@ -9,7 +9,7 @@
 #include <time.h>       /* time */
 #include <iostream>
 #include <vector>
-#include "../Common/Random.h"
+
 #include "../Common/ParameterSet.h"
 #include "../Common/MyUtil.h"
 #if defined(__linux__)
@@ -20,41 +20,26 @@
 
 using namespace std;
 
-class Individual {
+class Individual : public ParameterSet{
 public:
     Individual(int i, double mutationProb,  int cs, int mutType,
-               vector<double> min, vector<double> max, double(*func_ptr_fit)(vector<double>));
-    virtual ~Individual();
-
+               vector<double> min, vector<double> max, double(*func_fit)(vector<double>));
+    ~Individual();
     void  mutate(int gen, int genMax,double b);
-    void    setGeneration(int);
-    int     getId();
-    void    iniChromossome();
-    void changeBounds(int iChron, double min, double max);
-    double getGene(int i);
-    void updateChromossome();
-    void setChromossomeAux(int i, double val);
-    double getFitness();
 
-    double getChromossomeAux(int);
+    double getGene(int i);
+    double getFitness();
     void computeFitness();
     void printInfo();
 private:
     int mutType;
     double   fitness;
-    double(*function_ptr_fitness)(vector<double>);
-    double  uniformMutation(int i);
+    double   uniformMutation(int i);
     double   nonUniformMutation(int i, int gen, int genMax,double b);
     double   delta(double y,int gen, int genMax,double b);
-    default_random_engine individualRandomGenerator;
-    vector<double> chromosomeAUX;
-    ParameterSet *chromosome;
-    int chromosomeSize;
-    int     id;
+
+
     double mutationProb;
-
-
-
 };
 
 #endif //GENETICALGORITHM_INDIVIDUAL_H

@@ -5,6 +5,10 @@
 #ifndef COMMON_PARAMETERSET_H
 #define COMMON_PARAMETERSET_H
 
+#include <random> /* srand, rand */
+#include <time.h>       /* time */
+#include <chrono>
+
 #include <iostream>
 #include <vector>
 #include <math.h>
@@ -12,21 +16,34 @@
 #include <vector>
 #include "Parameter.h"
 #include "MyUtil.h"
-
+#include "Random.h"
 using namespace std;
 
 class ParameterSet {
 private:
     std::vector<Parameter*> parameters;
+    std::vector<double> parametersAUX;
+    double(*eval_function)(vector<double>);
     int parametersNum;
+    int     id;
 public:
-    ParameterSet(int, vector<double> min, vector<double> max);
-    virtual ~ParameterSet();
+    int   getId();
+    ParameterSet(int, int, vector<double> min, vector<double> max, double(*eval_func)(vector<double>));
+    ~ParameterSet();
+    int getParametersNum(){return parametersNum;};
     void setParameter(int i, double val);
     double getMaxParameter(int);
     double getMinParameter(int);
     double getParameter(int i);
-
+    void updateParameters();
+    void setParameterAux(int i, double val);
+    double getParameterAux(int);
+    void    iniParameters();
+    void changeBounds(int iChron, double min, double max);
+    double generateRandomParameter(int);
+    double evaluate();
+protected:
+    default_random_engine randomGenerator;
 
 };
 

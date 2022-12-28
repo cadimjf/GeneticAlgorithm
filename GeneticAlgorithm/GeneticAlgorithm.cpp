@@ -3,10 +3,12 @@
 //
 #include "GeneticAlgorithm.h"
 
-/**
- * The genetic algorithm constructor
+/***
+ *
+ * @param chromoSize
  * @param nPopulation
- * @param gm
+ * @param genNumber
+ * @param function_ptr_fitness
  */
 GeneticAlgorithm::GeneticAlgorithm(int chromoSize, int nPopulation, int genNumber, double(*function_ptr_fitness)(vector<double>) ):
         OptimizationMethod(chromoSize, genNumber, function_ptr_fitness)
@@ -98,6 +100,7 @@ double GeneticAlgorithm::crossOverBLXAlpha(double gene1, double gene2)
         cMin=gene2;
     }else{
         cMax=gene2;
+        cMax=gene2;
         cMin=gene1;
     }
     iMaxMin = cMax-cMin;
@@ -118,14 +121,15 @@ void GeneticAlgorithm::crossOver(int p1, int p2, int iInd)
     if(p1==p2 || myLuckyNumber > this->crossOverProb){
         //it does not perform crossver, the new genes are kept the same of the previous interaction
         for(int i=0; i<this->getParameterSetSize(); i++){
-            this->population[iInd]->setChromossomeAux(i, this->population[iInd]->getGene(i));
+            double x = this->population[iInd]->getGene(i);
+            this->population[iInd]->setParameterAux(i, x);
         }
     }else{//it must do crossver
         for(int i=0; i<this->getParameterSetSize(); i++){
             double newGene = fabs(this->crossOverBLXAlpha(
                     this->population[p1]->getGene(i),
                     this->population[p2]->getGene(i)));
-            this->population[iInd]->setChromossomeAux(i, newGene);
+            this->population[iInd]->setParameterAux(i, newGene);
         }
     }
 }
@@ -205,7 +209,7 @@ void GeneticAlgorithm::iniPopulation(){
                                             this->getParameterSetSize(),
                                             this->mutationType,
                                             this->getMinParameterSet(), this->getMaxParameterSet(), this->evaluation_function));
-        this->population[i]->iniChromossome();
+        this->population[i]->iniParameters();
     }
 
 }
