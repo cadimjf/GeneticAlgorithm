@@ -18,10 +18,10 @@ int main() {
     //ga->setMutationUniform();
     ga->setElite(2);
     //ga->setMutationProb(0.1);
-    ga->setMaxChromosome(0, 100);
-    //ga->setMinChromosome(1, 100);
-    ga->setMaxChromosome(1, 100);
-    ga->setStopCriteria(0.);
+    ga->setMaxParameter(0, 100);
+    //ga->setMinParameter(1, 100);
+    ga->setMaxParameter(1, 100);
+    ga->setStopCriteria(0.0003);
     ga->evolution();
     delete(ga);
     cout<<"FIM"<<endl;

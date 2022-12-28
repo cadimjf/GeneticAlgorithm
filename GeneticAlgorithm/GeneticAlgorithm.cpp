@@ -48,29 +48,25 @@ void GeneticAlgorithm::setMutationProb(double mp){
  * @param nPopulation
  * @param gm
  */
-GeneticAlgorithm::GeneticAlgorithm(int chromoSize, int nPopulation, int gm, double(*function_ptr_fitness)(vector<double>) )
+GeneticAlgorithm::GeneticAlgorithm(int chromoSize, int nPopulation, int gm, double(*function_ptr_fitness)(vector<double>) ):
+        OptimizationMethod(chromoSize, function_ptr_fitness)
 {
     try {
-        this->function_ptr_fitness = function_ptr_fitness;
         this->populationSize = nPopulation;
         this->avgFitness = 0.0;
         this->sumFit = 0.0;
-        this->agSeed = time(NULL);
-        this->iBest = 0;
-        this->iWorst = this->populationSize - 1;
+
         unsigned seed = chrono::system_clock::now().time_since_epoch().count();
         this->generationCurrent=0;
         //starts my random generator with the seed
         default_random_engine gen(seed);
         this->agRandomGenerator = gen;
         this->generationMax = gm;
-        this->chromossomeSize = chromoSize;
         this->setElite(4);
         this->setCrossOverProb(0.95);
         this->setAlpha(0.3);
         this->setMutationProb(0.05);
         this->setMutationB(3.0);
-        this->iniChromosomeBoundaries();
         this->setStopCriteria(0.0001);
         //used for rank selection - gives the sum of the position of all indivdual
         // 0 + 1 + 2 + ... + populationSize-1
@@ -82,41 +78,8 @@ GeneticAlgorithm::GeneticAlgorithm(int chromoSize, int nPopulation, int gm, doub
 }
 GeneticAlgorithm::~GeneticAlgorithm(){
     this->population.clear();
-    this->maxChromosome.clear();
-    this->minChromosome.clear();
-}
-/**
- * set a max allele value for a specific gene (i)
- * @param i
- * @param val
- */
-void GeneticAlgorithm::setMaxChromosome(int i, double val){
-    if(i<0 || i>=this->chromossomeSize) {
-        throw MyException("index out of boundaries", __FILE__, __LINE__);
-    }
-    this->maxChromosome[i]= val;
-}
-/**
- * set a min allele value for a specific gene (i)
- * @param i
- * @param val
- */
-void GeneticAlgorithm::setMinChromosome(int i, double val){
-    if(i<0 || i>=this->chromossomeSize) {
-        throw MyException("index out of boundaries", __FILE__, __LINE__);
-    }
-    this->minChromosome[i]= val;
-}
-/**
- * sets a default boundary to each allele
- */
-void GeneticAlgorithm::iniChromosomeBoundaries(){
-    for(int i=0; i<this->chromossomeSize;i++){
-        this->minChromosome.push_back(0.0);
-        this->maxChromosome.push_back(1000.0);
-    }
-}
 
+}
 
 /**
  * Select one individual for reproductions
@@ -178,11 +141,11 @@ void GeneticAlgorithm::crossOver(int p1, int p2, int iInd)
 ///if the parents are the same or the crossover is not done
     if(p1==p2 || myLuckyNumber > this->crossOverProb){
         //it does not perform crossver, the new genes are kept the same of the previous interaction
-        for(int i=0; i<this->chromossomeSize; i++){
+        for(int i=0; i<this->getParameterSetSize(); i++){
             this->population[iInd]->setChromossomeAux(i, this->population[iInd]->getGene(i));
         }
     }else{//it must do crossver
-        for(int i=0; i<chromossomeSize; i++){
+        for(int i=0; i<this->getParameterSetSize(); i++){
             double newGene = fabs(this->crossOverBLXAlpha(
                     this->population[p1]->getGene(i),
                     this->population[p2]->getGene(i)));
@@ -255,10 +218,10 @@ void GeneticAlgorithm::iniPopulation(){
     for(int i=0; i<this->populationSize; i++)
     {
         this->population.push_back(new Individual(i,
-                                             this->mutationProb,
-                                             this->chromossomeSize,
-                                             this->mutationType,
-                                             this->minChromosome, this->maxChromosome, this->function_ptr_fitness));
+                                            this->mutationProb,
+                                            this->getParameterSetSize(),
+                                            this->mutationType,
+                                            this->getMinParameterSet(), this->getMaxParameterSet(), this->evaluation_function));
         this->population[i]->iniChromossome();
     }
 

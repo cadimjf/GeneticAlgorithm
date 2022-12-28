@@ -4,15 +4,13 @@
 
 #ifndef GENETICALGORITHM_GENETICALGORITHM_H
 #define GENETICALGORITHM_GENETICALGORITHM_H
-#include <iostream>
-#include <vector>
-#include <stdlib.h>     /* srand, rand */
-#include <time.h>       /* time */
+
 #include "../Common/Random.h"
 #include "Individual.h"
 #include "../Common/MyUtil.h"
+#include "../Common/OptimizationMethod.h"
 using namespace std;
-class GeneticAlgorithm {
+class GeneticAlgorithm : public OptimizationMethod{
 public:
     GeneticAlgorithm(int cs, int nPopulation, int gm, double(*func_ptr_fit)(vector<double>));
     ~GeneticAlgorithm();
@@ -22,20 +20,15 @@ public:
     void setMutationB(double);
     void setMutationProb(double);
     void evolution();
-    void setMinChromosome(int i, double val);
-    void setMaxChromosome(int i, double val);
     void setStopCriteria(double s){stopCriteria=s;}
     double getStopCriteria(){return stopCriteria;}
     void setMutationNonUniform();
     void setMutationUniform();
 private:
     int mutationType;
-
     double stopCriteria;
-    double(*function_ptr_fitness)(vector<double>);
-    void iniChromosomeBoundaries();
     void iniPopulation();
-    unsigned    agSeed;
+
     int         elite; //number of individuals kept in the next generation
     int         populationSize;
     int         generationCurrent;
@@ -44,18 +37,15 @@ private:
     double      sumFit;
     double      avgFitness;
 
-    int         iBest;
-    int         iWorst;
     default_random_engine agRandomGenerator;
     double      crossOverProb;
     double      alpha;
     double      mutationB;
     double      mutationProb;
     std::vector<Individual*> population;
-    std::vector<double> maxChromosome;
-    std::vector<double> minChromosome;
+
     void computeFitness(int i0);
-    int chromossomeSize;
+
     void generation();
     int rankSelection(int forbidenGuy);
     double sumRank;
