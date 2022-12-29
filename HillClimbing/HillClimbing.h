@@ -12,17 +12,10 @@ public:
     HillClimbing(int paramSize, int iterNumber, double(*eval_function)(vector<double>));
     ~HillClimbing();
     void search();
-    void setNoise(double n){noise=n;};
-    double getNoise(){return noise;};
-    void setMaxParameter(int i, double val);
-    void setMinParameter(int i, double val);
+
     Population<ParameterSet*> *population;
 private:
-    double noise;
 
-    void makeNoise();
-    double getMaxNewParameter(int i);
-    double getMinNewParameter(int i);
 };
 
 

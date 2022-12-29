@@ -27,6 +27,7 @@ private:
     int parametersNum;
     int     id;
     double evalutionValue;
+    double evalutionValueAux;
 
 public:
 
@@ -44,7 +45,7 @@ public:
     void    iniParameters();
     void changeBounds(int iChron, double min, double max);
     double generateRandomParameter(int);
-    void evaluate();
+    double evaluate();
     double getRandomDouble(double min, double max);
     void print();
     void setMaxParameter(int i, double val);

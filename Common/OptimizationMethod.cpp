@@ -9,6 +9,11 @@
  * @param eval_function
  */
 using namespace std;
+/**
+ *
+ * @param iterationsNumber
+ * @param eval_function
+ */
 OptimizationMethod::OptimizationMethod( int iterationsNumber, double(*eval_function)(vector<double>)) {
     this->evaluation_function   = eval_function;
     this->iterationsNumber = iterationsNumber;

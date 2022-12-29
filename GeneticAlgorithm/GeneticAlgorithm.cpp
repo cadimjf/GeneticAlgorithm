@@ -36,7 +36,6 @@ GeneticAlgorithm::GeneticAlgorithm(int chromoSize, int nPopulation, int genNumbe
                                             this->evaluation_function);
             this->population->insertPopulationItem(ind);
         }
-        this->population->initialize();
     }catch(MyException& caught){
         std::cout<<caught.getMessage()<<std::endl;
     }
@@ -194,7 +193,7 @@ void GeneticAlgorithm::generation(){
 void GeneticAlgorithm::computeFitness(int i0){
     this->sumFit = 0.0;
     for(int i=i0; i<this->population->getSize(); i++){
-        this->population->popItems.at(i)->evaluate();
+        this->population->popItems.at(i)->computeFitness();
         this->sumFit += this->population->popItems.at(i)->getEvaluationValue();
     }
     //orders the population according to the fitness
@@ -207,20 +206,23 @@ void GeneticAlgorithm::computeFitness(int i0){
  */
 void GeneticAlgorithm::search(){
     try{
-
+        this->population->initialize();
         //compute fitness with the initial populations
         this->computeFitness(0);
-        for(iterationCurrent=1;iterationCurrent<=iterationsNumber;iterationCurrent++){
+        iterationCurrent=1;
+        do{
             //performs the crossovers and mutations
             this->generation();
             //computes the fitness
             this->computeFitness(this->elite);
+            iterationCurrent++;
             //if the best individual fitness is less than the stop criteria, stops
             if(population->popItems.at(0)->getEvaluationValue()<=this->getStopCriteria()){
                 cout<<"Reached the stop criteria: "<<this->getStopCriteria()<<endl;
                 break;
             }
-        }
+        }while(iterationCurrent<iterationsNumber);
+
         cout<<"Finished evolution on generation "<<iterationCurrent<<endl;
         population->popItems.at(0)->printInfo();
 

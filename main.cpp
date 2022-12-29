@@ -19,22 +19,21 @@ void run(){
     ga->setMutationUniform();
     ga->setElite(2);
     //ga->setMutationProb(0.1);
-    //ga->population->setMaxParameter(0, 1000);
-    //ga->setMinParameter(1, 100);
-    //ga->population->setMaxParameter(1, 10);
+    ga->population->setMaxParameter(0, 1000);
+    ga->population->setMaxParameter(1, 1000);
     ga->setStopCriteria(0.0003);
     ga->search();
     delete(ga);
-    //cout<<"================================="<<endl;
-    /*
+    cout<<"================================="<<endl;
+
     HillClimbing *hc = new HillClimbing(2, 10000, function_ptr);
-    hc->setNoise(0.001);
+    hc->population->setNoise(0.1);
     hc->population->setMaxParameter(0, 1000);
     hc->population->setMaxParameter(1, 1000);
     hc->setStopCriteria(0.0003);
     hc->search();
     delete(hc);
-    cout<<"================================="<<endl;*/
+    cout<<"================================="<<endl;
 
 }
 

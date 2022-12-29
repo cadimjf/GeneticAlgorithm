@@ -65,10 +65,39 @@ template <class genericPop>
         };
         int getSize(){return populationSize;};
         int getParameterSetSize(){return parameterSetSize;};
-
+        void makeNoise(){
+            double newParam = 0.0;
+            for(int i=0; i<this->popItems.at(0)->getParametersNum();i++){
+                //the interval is from -noise : +noisa
+                newParam = this->popItems.at(0)->getRandomDouble(getMinNewParameter(i), getMaxNewParameter(i));
+                //cout<<getMinNewParameter(i)<<" "<<newParam<<" "<<getMaxNewParameter(i)<<endl;
+                this->popItems.at(0)->setParameterAux(i, newParam);
+            }
+        };
+        void setNoise(double n){noise=n;};
+        double getNoise(){return noise;};
     private:
         int populationSize;
         int parameterSetSize;
+        double noise;
+
+        double getMinNewParameter(int i){
+            double parameterNoised = this->popItems.at(0)->getParameter(i) - this->getNoise();
+            if (parameterNoised<this->popItems.at(0)->getMinParameter(i)){
+                return this->popItems.at(0)->getMinParameter(i);
+            }else{
+                return parameterNoised;
+            }
+        };
+        double getMaxNewParameter(int i){
+            double parameterNoised = this->popItems.at(0)->getParameter(i) + this->getNoise();
+            if (parameterNoised > this->popItems.at(0)->getMaxParameter(i)){
+                return this->popItems.at(0)->getMaxParameter(i);
+            }else{
+                return parameterNoised;
+            }
+        };
+
 
     };
 

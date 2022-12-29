@@ -118,6 +118,7 @@ void Individual::computeFitness(){
     //puts the new genes in the individual chromosome
     this->updateParameters();
 
+
 }
 
 void Individual::printInfo(){

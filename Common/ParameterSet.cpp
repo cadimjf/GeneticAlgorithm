@@ -13,6 +13,7 @@ ParameterSet::ParameterSet(int id, int numPar, double(*eval_func)(vector<double>
     this->id = id;
     this->eval_function =eval_func;
     this->evalutionValue = 0.0;
+    this->evalutionValueAux=0.0;
     this->parametersNum = numPar;
     //create parameters set
     for(int i =0; i<this->parametersNum; i++){
@@ -96,9 +97,12 @@ double ParameterSet::getParameterAux(int i){
  * Copies alleles from chromosomeAUX to realchromossomes
  */
 void ParameterSet::updateParameters(){
+    //update the set of parameters
     for (int i=0;i<this->parametersNum;i++){
         this->setParameter(i,  this->getParameterAux(i) ) ;
     }
+    //udates the fitness too
+    this->evalutionValue = this->evalutionValueAux;
 }
 /**
  *
@@ -126,8 +130,9 @@ void ParameterSet::iniParameters()
     }
 }
 
-void ParameterSet::evaluate(){
-    this->evalutionValue =  this->eval_function(this->parametersAUX);
+double  ParameterSet::evaluate(){
+    this->evalutionValueAux =  this->eval_function(this->parametersAUX);
+    return evalutionValueAux;
 }
 
 void ParameterSet::print(){
