@@ -26,8 +26,10 @@ private:
     double(*eval_function)(vector<double>);
     int parametersNum;
     int     id;
+    double evalutionValue;
 
 public:
+
     int   getId();
     ParameterSet(int, int, double(*eval_func)(vector<double>));
     ~ParameterSet();
@@ -42,11 +44,12 @@ public:
     void    iniParameters();
     void changeBounds(int iChron, double min, double max);
     double generateRandomParameter(int);
-    double evaluate();
+    void evaluate();
     double getRandomDouble(double min, double max);
     void print();
     void setMaxParameter(int i, double val);
     void setMinParameter(int i, double val);
+    double getEvaluationValue(){return evalutionValue;};
 protected:
     default_random_engine randomGenerator;
 

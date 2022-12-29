@@ -13,11 +13,10 @@
  * @param max
  * @param func_ptr_fit
  */
-Individual::Individual(int id, double mutationProb, int cs, int mutType,
-                       double(*fit_function)(vector<double>)):ParameterSet(id, cs, fit_function)
+Individual::Individual(int id, int chromosomeSize, double mutationProb,  int mutType,
+                       double(*fit_function)(vector<double>)):ParameterSet(id, chromosomeSize, fit_function)
 {
     this->mutType = mutType;
-    this->fitness = 0.0;
     this->mutationProb = mutationProb;
 
 }
@@ -92,7 +91,6 @@ void Individual::mutate(int generation=0, int maxGeneration=0, double b=0.0) {
             }else{
                 throw MyException("Invalid mutation type! ", __FILE__, __LINE__);
             }
-
             this->setParameterAux(i , newGene);
         }
     }
@@ -112,17 +110,10 @@ double Individual::getGene(int i){
 
 /**
  *
- * @return
- */
-double Individual::getFitness(){
-    return this->fitness;
-}
-/**
- *
  */
 void Individual::computeFitness(){
     //computes the fitness (defined by user)
-    this->fitness =this->evaluate();
+    this->evaluate();
     //After applying all genetic operation in the generation,
     //puts the new genes in the individual chromosome
     this->updateParameters();
@@ -130,7 +121,7 @@ void Individual::computeFitness(){
 }
 
 void Individual::printInfo(){
-    cout<<"Fitness: "<<this->getFitness()<<endl;
+    cout<<"Fitness: "<<this->getEvaluationValue()<<endl;
     cout<<"ID: "<<this->getId()<<endl;
     cout<<"Chromossome: "<<endl;
     this->print();

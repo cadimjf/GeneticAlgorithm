@@ -22,24 +22,19 @@ using namespace std;
 
 class Individual : public ParameterSet{
 public:
-    Individual(int i, double mutationProb,  int cs, int mutType,
+    Individual(int i, int cs, double mutationProb,  int mutType,
                double(*func_fit)(vector<double>));
     ~Individual();
     void  mutate(int gen, int genMax,double b);
-
     double getGene(int i);
-    double getFitness();
     void computeFitness();
     void printInfo();
 
 private:
     int mutType;
-    double   fitness;
     double   uniformMutation(int i);
     double   nonUniformMutation(int i, int gen, int genMax,double b);
     double   delta(double y,int gen, int genMax,double b);
-
-
     double mutationProb;
 };
 

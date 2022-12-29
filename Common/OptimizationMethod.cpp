@@ -9,8 +9,7 @@
  * @param eval_function
  */
 using namespace std;
-OptimizationMethod::OptimizationMethod(int paramSetSize, int iterationsNumber, double(*eval_function)(vector<double>)) {
-    this->parameterSetSize      = paramSetSize;
+OptimizationMethod::OptimizationMethod( int iterationsNumber, double(*eval_function)(vector<double>)) {
     this->evaluation_function   = eval_function;
     this->iterationsNumber = iterationsNumber;
     unsigned seed = chrono::system_clock::now().time_since_epoch().count();
@@ -24,10 +23,6 @@ OptimizationMethod::OptimizationMethod(int paramSetSize, int iterationsNumber, d
 OptimizationMethod::~OptimizationMethod() {
 
 }
-/**
- *
- * @return
- */
-int OptimizationMethod::getParameterSetSize(){
-    return this->parameterSetSize;
-}
+
+
+

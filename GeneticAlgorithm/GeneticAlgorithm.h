@@ -6,11 +6,13 @@
 #define GENETICALGORITHM_GENETICALGORITHM_H
 
 #include "../Common/Random.h"
+#include "../Common/Population.h"
 #include "Individual.h"
 #include "../Common/MyUtil.h"
 #include "../Common/OptimizationMethod.h"
 using namespace std;
-class GeneticAlgorithm : public OptimizationMethod{
+
+class GeneticAlgorithm: public OptimizationMethod{
 public:
     GeneticAlgorithm(int cs, int nPopulation, int gm, double(*func_ptr_fit)(vector<double>));
     ~GeneticAlgorithm();
@@ -24,35 +26,26 @@ public:
     void setMutationUniform();
     void setSelectionRouletteWheel();
     void setSelectionRank();
-    void setMaxParameter(int i, double val);
-    void setMinParameter(int i, double val);
+    Population<Individual*> *population;
 private:
+
     int mutationType;
     int selectionType;
 
-    void iniPopulation();
-
     int         elite; //number of individuals kept in the next generation
-    int         populationSize;
-    double      sumFit;
-
     double      crossOverProb;
     double      alpha;
     double      mutationB;
     double      mutationProb;
-    std::vector<Individual*> population;
-
     void computeFitness(int i0);
-
     void generation();
     int rankSelection(int forbidenGuy);
     int rouletteWheelSelection(int forbidenGuy);
     double sumRank;
     void crossOver(int p1, int p2, int iInd);
     double crossOverBLXAlpha(double gene1, double gene2);
-    int partitionQckSort(int p, int r);
-    void quickSort( int p, int r);
-
+    void selection(int *p1, int *p2);
+    double      sumFit;
 };
 
 

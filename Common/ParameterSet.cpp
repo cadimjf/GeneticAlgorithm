@@ -12,6 +12,7 @@
 ParameterSet::ParameterSet(int id, int numPar, double(*eval_func)(vector<double>) ){
     this->id = id;
     this->eval_function =eval_func;
+    this->evalutionValue = 0.0;
     this->parametersNum = numPar;
     //create parameters set
     for(int i =0; i<this->parametersNum; i++){
@@ -125,8 +126,8 @@ void ParameterSet::iniParameters()
     }
 }
 
-double ParameterSet::evaluate(){
-    return this->eval_function(this->parametersAUX);
+void ParameterSet::evaluate(){
+    this->evalutionValue =  this->eval_function(this->parametersAUX);
 }
 
 void ParameterSet::print(){

@@ -10,47 +10,72 @@
  * @param eval_function
  */
 HillClimbing::HillClimbing(int paramSize, int iterNumber, double(*eval_function)(vector<double>)):
-        OptimizationMethod(paramSize, iterNumber, eval_function){
+        OptimizationMethod(iterNumber, eval_function){
         this->setNoise(0.01);
-        this->paramSet = new ParameterSet(0, this->getParameterSetSize(), eval_function);
+        this->population = new Population<ParameterSet*>(1, paramSize);
+        this->population->insertPopulationItem(new ParameterSet(0, paramSize, eval_function));
+        this->population->initialize();
 }
+/**
+ *
+ */
 HillClimbing::~HillClimbing(){
-    delete(this->paramSet);
+    delete(this->population);
 
+}
+/**
+ *
+ * @param i
+ * @return
+ */
+double HillClimbing::getMinNewParameter(int i){
+    double parameterNoised = this->population->popItems.at(0)->getParameter(i); - this->getNoise();
+    if (parameterNoised<this->population->popItems.at(0)->getMinParameter(i)){
+        return this->population->popItems.at(0)->getMinParameter(i);
+    }else{
+        return parameterNoised;
+    }
+}
+/**
+ *
+ * @param i
+ * @return
+ */
+double HillClimbing::getMaxNewParameter(int i){
+    double parameterNoised = this->population->popItems.at(0)->getParameter(i) + this->getNoise();
+    if (parameterNoised > this->population->popItems.at(0)->getMaxParameter(i)){
+        return this->population->popItems.at(0)->getMaxParameter(i);
+    }else{
+        return parameterNoised;
+    }
 }
 /**
  *
  */
 void HillClimbing::makeNoise(){
-    double maxParam=0.0, minParam=0.0, newParam = 0.0, oldParam=0.0;
-    double minBound, maxBound;
-    for(int i=0; i<this->paramSet->getParametersNum();i++){
-        oldParam = this->paramSet->getParameter(i);
-        minBound = this->paramSet->getMinParameter(i);
-        maxBound = this->paramSet->getMaxParameter(i);
+    double newParam = 0.0;
+    for(int i=0; i<this->population->popItems.at(0)->getParametersNum();i++){
         //the interval is from -noise : +noisa
-        minParam = oldParam - this->getNoise();
-        minParam = (minParam<minBound)?minBound:minParam;
-        //
-        maxParam = oldParam + this->getNoise();
-        maxParam = (maxParam>maxBound)?maxBound:maxParam;
-        newParam = this->paramSet->getRandomDouble(minParam, maxParam);
-        this->paramSet->setParameterAux(i, newParam);
+        newParam = this->population->popItems.at(0)->getRandomDouble(getMinNewParameter(i), getMaxNewParameter(i));
+        this->population->popItems.at(0)->setParameterAux(i, newParam);
     }
-
 }
+/**
+ *
+ */
 void HillClimbing::search(){
-    this->paramSet->iniParameters();
+
     double curEvaluation=std::numeric_limits<double>::lowest();
     double eval=0.0;
     int it=1;
     for(it=1;it<=this->iterationsNumber;it++){
         //disturb the parameters
         this->makeNoise();
-        eval = this->paramSet->evaluate();
+        this->population->popItems.at(0)->evaluate();
+        eval =this->population->popItems.at(0)->getEvaluationValue();
         if(eval>curEvaluation){
             //accept the new parameters
-            this->paramSet->updateParameters();
+            this->population->popItems.at(0)->updateParameters();
             //updates the curEvaluation
             curEvaluation = eval;
         }
@@ -61,7 +86,7 @@ void HillClimbing::search(){
     }
     cout<<"Evaluation: "<<curEvaluation<<endl;
     cout<<"Iterations : "<<it<<endl;
-    this->paramSet->print();
+    this->population->popItems.at(0)->print();
 
 }
 
@@ -71,7 +96,7 @@ void HillClimbing::search(){
  * @param val
  */
 void HillClimbing::setMaxParameter(int i, double val){
-    this->paramSet->setMaxParameter(i, val);
+    this->population->popItems.at(0)->setMaxParameter(i, val);
 }
 /**
  *
@@ -79,5 +104,5 @@ void HillClimbing::setMaxParameter(int i, double val){
  * @param val
  */
 void HillClimbing::setMinParameter(int i, double val){
-    this->paramSet->setMinParameter(i, val);
+    this->population->popItems.at(0)->setMinParameter(i, val);
 }
