@@ -7,7 +7,7 @@
 #include "../Common/OptimizationMethod.h"
 #include "../Common/Population.h"
 #include "../Common/ParameterSet.h"
-#include "<math.h>"
+#include <math.h> 
 using namespace std;
 
 class SimulatedAnnealing: public OptimizationMethod {
@@ -16,9 +16,12 @@ public:
     ~SimulatedAnnealing();
     void search();
     Population<ParameterSet*> *population;
+    void setInitialTemperature(double);
 private:
-    double temperature;
     double deltaE;
+    double acceptProbability();
+    double temperature();
+    double temperatureInitial;
 
 };
 

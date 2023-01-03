@@ -2,7 +2,7 @@
 #include <vector>
 #include "GeneticAlgorithm/GeneticAlgorithm.h"
 #include "HillClimbing/HillClimbing.h"
-
+#include "SimulatedAnnealing/SimulatedAnnealing.h"
 using namespace std;
 
 double myFunction(double x, double y){
@@ -25,7 +25,6 @@ void run(){
     ga->search();
     delete(ga);
     cout<<"================================="<<endl;
-
     HillClimbing *hc = new HillClimbing(2, 100000, function_ptr);
     hc->population->setNoise(0.1);
     hc->population->setMaxParameter(0, 1000);
@@ -33,6 +32,16 @@ void run(){
     hc->setStopCriteria(0.0003);
     hc->search();
     delete(hc);
+    cout<<"================================="<<endl;
+
+    SimulatedAnnealing *sa = new SimulatedAnnealing(2, 100000, function_ptr);
+    sa->population->setNoise(0.1);
+    sa->setInitialTemperature(100000.0);
+    sa->population->setMaxParameter(0, 1000);
+    sa->population->setMaxParameter(1, 1000);
+    sa->setStopCriteria(0.0003);
+    sa->search();
+    delete(sa);
     cout<<"================================="<<endl;
 
 }
