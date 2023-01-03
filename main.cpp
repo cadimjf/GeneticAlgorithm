@@ -6,7 +6,7 @@
 using namespace std;
 
 double myFunction(double x, double y){
-    return x*x + x*y -y + 5.0;
+    return -x*x + x*y -y + 5.0;
 }
 double myFitness(vector<double> param){
     double res = myFunction(param.at(0), param.at(1));
@@ -26,7 +26,7 @@ void run(){
     delete(ga);
     cout<<"================================="<<endl;
 
-    HillClimbing *hc = new HillClimbing(2, 10000, function_ptr);
+    HillClimbing *hc = new HillClimbing(2, 100000, function_ptr);
     hc->population->setNoise(0.1);
     hc->population->setMaxParameter(0, 1000);
     hc->population->setMaxParameter(1, 1000);

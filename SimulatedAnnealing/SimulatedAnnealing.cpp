@@ -14,9 +14,8 @@ SimulatedAnnealing::SimulatedAnnealing(int paramSize, int iterNumber, double(*ev
 
     this->population = new Population<ParameterSet*>(1, paramSize);
     this->population->insertPopulationItem(new ParameterSet(0, paramSize, eval_function));
-    this->population->initialize();
     this->temperature=0.0;
-    this->energy=0.0;
+    this->deltaE=0.0;
 }
 /**
  *
@@ -25,57 +24,49 @@ SimulatedAnnealing::~SimulatedAnnealing(){
     delete(this->population);
 
 }
-/**
- *
- * @param i
- * @return
- */
-double SimulatedAnnealing::getMinNewParameter(int i){
-    double parameterNoised = this->population->popItems.at(0)->getParameter(i); - this->getNoise();
-    if (parameterNoised<this->population->popItems.at(0)->getMinParameter(i)){
-        return this->population->popItems.at(0)->getMinParameter(i);
-    }else{
-        return parameterNoised;
-    }
+
+double SimulatedAnnealing::getProbability(double deltaE, double t){
+
+    return exp(deltaE/temperature);
 }
-/**
- *
- * @param i
- * @return
- */
-double SimulatedAnnealing::getMaxNewParameter(int i){
-    double parameterNoised = this->population->popItems.at(0)->getParameter(i) + this->getNoise();
-    if (parameterNoised > this->population->popItems.at(0)->getMaxParameter(i)){
-        return this->population->popItems.at(0)->getMaxParameter(i);
-    }else{
-        return parameterNoised;
-    }
-}
+
 /**
  *
  */
 void SimulatedAnnealing::search(){
 
-    double curEvaluation=std::numeric_limits<double>::lowest();
-    double newEvaluation=0.0;
+    //random start new solution
+    this->population->initialize();
+    //compute the evaluation
+    double newEvaluation = this->population->popItems.at(0)->evaluate();
+    //accept the new parameters
+    this->population->popItems.at(0)->updateParameters();
+    double bestEvaluation=newEvaluation;
+    
     int it=1;
     for(it=1;it<=this->iterationsNumber;it++){
         //disturb the parameters
         this->populamakeNoise();
         this->population->popItems.at(0)->evaluate();
-        newEvaluation =this->population->popItems.at(0)->getEvaluationValue();
-        if(eval>curEvaluation){
+        newEnergy =this->population->popItems.at(0)->getEvaluationValue();
+        deltaE = newEvaluation - currentEnergy;
+        // looking for the mininum
+        if(newEvaluation < currentEvaluation){
             //accept the new parameters
             this->population->popItems.at(0)->updateParameters();
             //updates the curEvaluation
-            curEvaluation = eval;
+            currentEvaluation = newEvaluation;
+        }else{
+            //the new evaluation is worse than the current
+            //accept under probability of e^(deltaE/T)
+
         }
-        if(curEvaluation<=this->getStopCriteria()){
+        if(currentEvaluation<=this->getStopCriteria()){
             cout<<"Reached the stop criteria: "<<this->getStopCriteria()<<endl;
             break;
         }
     }
-    cout<<"Evaluation: "<<curEvaluation<<endl;
+    cout<<"Evaluation: "<<currentEvaluation<<endl;
     cout<<"Iterations : "<<it<<endl;
     this->population->popItems.at(0)->print();
 

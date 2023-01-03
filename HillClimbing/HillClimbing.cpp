@@ -28,27 +28,33 @@ HillClimbing::~HillClimbing(){
  *
  */
 void HillClimbing::search(){
+    //random start new solution
     this->population->initialize();
-    double curEvaluation=std::numeric_limits<double>::lowest();
-    double eval=0.0;
+    //compute the evaluation
+    double newEvaluation = this->population->popItems.at(0)->evaluate();
+    //accept the new parameters
+    this->population->popItems.at(0)->updateParameters();
+    double bestEvaluation=newEvaluation;
+
     iterationCurrent=1;
     do{
         //disturb the parameters
         this->population->makeNoise();
-        eval = this->population->popItems.at(0)->evaluate();
-        if(eval>curEvaluation){
+        newEvaluation = this->population->popItems.at(0)->evaluate();
+        // looking for the mininum - accepts the new solution if its evaluation is lower than the current
+        if(newEvaluation < bestEvaluation){
             //accept the new parameters
             this->population->popItems.at(0)->updateParameters();
             //updates the curEvaluation
-            curEvaluation = eval;
+            bestEvaluation = newEvaluation;
         }
         iterationCurrent++;
-        if(curEvaluation<=this->getStopCriteria()){
+        if(bestEvaluation<=this->getStopCriteria()){
             cout<<"Reached the stop criteria: "<<this->getStopCriteria()<<endl;
             break;
         }
     }while(iterationCurrent<iterationsNumber);
-    cout<<"Evaluation: "<<curEvaluation<<endl;
+    cout<<"Evaluation: "<<bestEvaluation<<endl;
     cout<<"Iterations : "<<iterationCurrent<<endl;
     this->population->popItems.at(0)->print();
 
