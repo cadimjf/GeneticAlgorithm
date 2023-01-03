@@ -47,7 +47,8 @@ void SimulatedAnnealing::search(){
     this->population->popItems.at(0)->updateParameters();
     double currentEvaluation=newEvaluation;
     //search
-    for(iterationCurrent=1;iterationCurrent<=this->iterationsNumber;iterationCurrent++){
+    iterationCurrent=1;
+    do{
         //disturb the parameters
         this->population->makeNoise();
         newEvaluation = this->population->popItems.at(0)->evaluate();
@@ -68,13 +69,13 @@ void SimulatedAnnealing::search(){
                 //updates the curEvaluation
                 currentEvaluation = newEvaluation;
             }
-
         }
+        iterationCurrent++;
         if(currentEvaluation<=this->getStopCriteria()){
             cout<<"Reached the stop criteria: "<<this->getStopCriteria()<<endl;
             break;
         }
-    }
+    }while(iterationCurrent<iterationsNumber);
     cout<<"Evaluation: "<<currentEvaluation<<endl;
     cout<<"Iterations : "<<iterationCurrent<<endl;
     cout<<"Temperature: "<<this->temperature()<<" - "<<this->acceptProbability()<<endl;

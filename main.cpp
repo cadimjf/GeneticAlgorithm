@@ -13,33 +13,36 @@ double myFitness(vector<double> param){
     return fabs(res);
 }
 void run(){
+    int iterations = 1000000;
+    double stopCriteria = 1e-6;
     double (*function_ptr)(vector<double>) = &myFitness;
+    int numParameter = 2;
     //(*function_ptr)()
-    GeneticAlgorithm *ga = new GeneticAlgorithm(2, 50, 1000, function_ptr);
+    GeneticAlgorithm *ga = new GeneticAlgorithm(numParameter, 50, iterations, function_ptr);
     ga->setMutationUniform();
     ga->setElite(2);
     //ga->setMutationProb(0.1);
     ga->population->setMaxParameter(0, 1000);
     ga->population->setMaxParameter(1, 1000);
-    ga->setStopCriteria(0.0003);
+    ga->setStopCriteria(stopCriteria);
     ga->search();
     delete(ga);
     cout<<"================================="<<endl;
-    HillClimbing *hc = new HillClimbing(2, 100000, function_ptr);
+    HillClimbing *hc = new HillClimbing(numParameter, iterations, function_ptr);
     hc->population->setNoise(0.1);
     hc->population->setMaxParameter(0, 1000);
     hc->population->setMaxParameter(1, 1000);
-    hc->setStopCriteria(0.0003);
+    hc->setStopCriteria(stopCriteria);
     hc->search();
     delete(hc);
     cout<<"================================="<<endl;
 
-    SimulatedAnnealing *sa = new SimulatedAnnealing(2, 100000, function_ptr);
+    SimulatedAnnealing *sa = new SimulatedAnnealing(numParameter, iterations, function_ptr);
     sa->population->setNoise(0.1);
-    sa->setInitialTemperature(100000.0);
+    sa->setInitialTemperature(10.0);
     sa->population->setMaxParameter(0, 1000);
     sa->population->setMaxParameter(1, 1000);
-    sa->setStopCriteria(0.0003);
+    sa->setStopCriteria(stopCriteria);
     sa->search();
     delete(sa);
     cout<<"================================="<<endl;
