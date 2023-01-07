@@ -34,19 +34,19 @@ work [Socha and Dorigo, 2008]:
 where, q is a parameter of the algorithm and k is the size of the archive. The mean of
 the Gaussian function is set to 1, so that the best solution has the highest weight.
 */
-double SolutionArchieve::computeWeight(int k, int j, double q ){
+double SolutionArchive::computeWeight(int k, int j, double q ){
   if(j>=k){
     throw MyException("Parameter j has be lower than k ", __FILE__, __LINE__);
   }
-  this->weight = (1.0/(q*k*sqrt(2.0*std::numbers::pi))*exp(-pow(j-1, w)/(2.*q*q*k*k)));
-  return weight;
+  this->weight = (1.0/(q*k*sqrt(2.0*M_PI))*exp(-powf(j-1, 2)/(2.*q*q*k*k)));
+  return this->weight;
 }
 
 /***
  * An ant chooses probabilistically one of the solutions in the
 archive. The probability of choosing solution j is given by:
  * */
-double SolutionArchieve::getProbability(double sumWeights){
+double SolutionArchive::computeProbability(double sumWeights){
   this->probability = this->weight / sumWeights; 
-  return probability;
+  return this->probability;
 }

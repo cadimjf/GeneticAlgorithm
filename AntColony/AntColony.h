@@ -9,20 +9,23 @@
 #include "../Common/Population.h"
 #include "../Common/MyUtil.h"
 #include "../Common/OptimizationMethod.h"
-#include "SolutionArchieve"
+#include "SolutionArchive.h"
 using namespace std;
 
 class AntColony: public OptimizationMethod{
 public:
+
     AntColony(int numParam, int nAnts, int numArchive, int itNumber, double(*func_ptr_fit)(vector<double>));
     ~AntColony();
     Population<SolutionArchive*> *population;
     void search();
 
 private:
+    double sumWeight;
     int nAnts;
-    int numArchive;
-    double q;
+    int archiveSize;
+    double localitySearchProcess;
+    double speedConvergence;
     void fitness(int, int);
     void weights();
     void probabilities();

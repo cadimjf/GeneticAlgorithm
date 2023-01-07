@@ -1,7 +1,7 @@
 CC = g++
 CFLAGS = -Wall -O3
 LDFLAGS =
-OBJFILES = Common/Random.o Common/MyUtil.o Common/Parameter.o Common/ParameterSet.o Common/Population.o Common/OptimizationMethod.o GeneticAlgorithm/Individual.o GeneticAlgorithm/GeneticAlgorithm.o HillClimbing/HillClimbing.o SimulatedAnnealing/SimulatedAnnealing.o main.o
+OBJFILES = Common/Random.o Common/MyUtil.o Common/Parameter.o Common/ParameterSet.o Common/Population.o Common/OptimizationMethod.o GeneticAlgorithm/Individual.o GeneticAlgorithm/GeneticAlgorithm.o HillClimbing/HillClimbing.o SimulatedAnnealing/SimulatedAnnealing.o AntColony/SolutionArchive.o AntColony/AntColony.o main.o
 TARGET = OptimizationAlgorithms.exe
 
 

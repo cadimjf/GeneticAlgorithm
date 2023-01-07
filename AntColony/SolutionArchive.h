@@ -7,7 +7,6 @@
 
 #include "../Common/ParameterSet.h"
 #include <math.h>
-#include <numbers> // std::numbers
 
 using namespace std;
 
