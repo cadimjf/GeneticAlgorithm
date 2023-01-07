@@ -17,9 +17,13 @@ public:
     double computeWeight(int k, int j, double q );
     double computeProbability(double);
     void getFitness();
+    double getProbability();
+    double getWeight();
 private:
     double probability;
     double weight;
+
+
 
 };
 

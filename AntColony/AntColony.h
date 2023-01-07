@@ -24,13 +24,21 @@ private:
     double sumWeight;
     int nAnts;
     int archiveSize;
-    double localitySearchProcess;
-    double speedConvergence;
+    double localitySearchProcess; //q
+    double speedConvergence;//ksi - evaporation rate
     void fitness(int, int);
     void weights();
     void probabilities();
 
-
+    vector<double> antSolutionDistances(int jArchive);
+    vector<double> antSigma(int jArchive);
+    vector<double> antMeans();
+    double antGaussianFunction(double sigma, double mi, double x);
+    double antProbabilityDensityFunction(double sigma, double mi, double x);
+    void antNewSolution(int jArchive, int iAnt, vector<double>);
+    void antConstructSolutions();
+    int antSelectSolution();
+    void pheromones();
 };
 
 

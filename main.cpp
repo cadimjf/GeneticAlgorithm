@@ -1,8 +1,6 @@
 #include <iostream>
 #include <vector>
-#include "GeneticAlgorithm/GeneticAlgorithm.h"
-#include "HillClimbing/HillClimbing.h"
-#include "SimulatedAnnealing/SimulatedAnnealing.h"
+#include "OptimizationAlgorithms.h"
 using namespace std;
 
 double myFunction(double x, double y){
@@ -12,6 +10,7 @@ double myFitness(vector<double> param){
     double res = myFunction(param.at(0), param.at(1));
     return fabs(res);
 }
+
 void run(){
     vector<double> myFirstGuess;
     myFirstGuess.push_back(10.0);
@@ -30,7 +29,7 @@ void run(){
     ga->population->setMaxParameter(0, 1000);
     ga->population->setMaxParameter(1, 1000);
     ga->setStopCriteria(stopCriteria);
-    ga->population->popItems.at(0)->insertItem(myFirstGuess);
+    //ga->population->popItems.at(0)->insertItem(myFirstGuess);
     ga->search();
     delete(ga);
     cout<<"================================="<<endl;
@@ -40,7 +39,7 @@ void run(){
     hc->population->setMaxParameter(0, 1000);
     hc->population->setMaxParameter(1, 1000);
     hc->setStopCriteria(stopCriteria);
-    hc->population->popItems.at(0)->insertItem(myFirstGuess);
+    //hc->population->popItems.at(0)->insertItem(myFirstGuess);
     hc->search();
     delete(hc);
     cout<<"================================="<<endl;
@@ -51,9 +50,19 @@ void run(){
     sa->population->setMaxParameter(0, 1000);
     sa->population->setMaxParameter(1, 1000);
     sa->setStopCriteria(stopCriteria);
-    sa->population->popItems.at(0)->insertItem(myFirstGuess);
+    //sa->population->popItems.at(0)->insertItem(myFirstGuess);
     sa->search();
     delete(sa);
+    cout<<"================================="<<endl;
+
+
+    AntColony *ac = new AntColony(numParameter, 5, 50, iterations, function_ptr);
+    ac->population->setMaxParameter(0, 1000);
+    ac->population->setMaxParameter(1, 1000);
+    ac->setStopCriteria(stopCriteria);
+    //ac->population->popItems.at(0)->insertItem(myFirstGuess);
+    ac->search();
+    delete(ac);
     cout<<"================================="<<endl;
 
 }
