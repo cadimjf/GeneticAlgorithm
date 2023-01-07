@@ -42,7 +42,8 @@ public:
     void updateParameters();
     void setParameterAux(int i, double val);
     double getParameterAux(int);
-    void    iniParameters();
+    void    iniParameterSet();
+    void iniParameter(int);
     void changeBounds(int iChron, double min, double max);
     double generateRandomParameter(int);
     double evaluate();
@@ -51,6 +52,7 @@ public:
     void setMaxParameter(int i, double val);
     void setMinParameter(int i, double val);
     double getEvaluationValue(){return evalutionValue;};
+    void insertItem(vector<double> v);
 protected:
     default_random_engine randomGenerator;
 

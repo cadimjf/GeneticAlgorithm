@@ -16,6 +16,8 @@ SimulatedAnnealing::SimulatedAnnealing(int paramSize, int iterNumber, double(*ev
     this->population->insertPopulationItem(new ParameterSet(0, paramSize, eval_function));
     this->deltaE=0.0;
     this->temperatureInitial = 100.0;
+    //random start new solution
+    this->population->initialize();
 }
 /**
  *
@@ -39,8 +41,6 @@ void SimulatedAnnealing::setInitialTemperature(double t0){
  */
 void SimulatedAnnealing::search(){
 
-    //random start new solution
-    this->population->initialize();
     //compute the evaluation
     double newEvaluation = this->population->popItems.at(0)->evaluate();
     //accept the new parameters

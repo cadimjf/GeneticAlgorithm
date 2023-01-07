@@ -23,6 +23,7 @@ Individual::Individual(int id, int chromosomeSize, double mutationProb,  int mut
 
 /**
  *
+ * 
  */
 Individual::~Individual() {
 }

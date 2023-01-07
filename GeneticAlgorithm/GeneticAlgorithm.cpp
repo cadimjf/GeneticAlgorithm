@@ -36,6 +36,8 @@ GeneticAlgorithm::GeneticAlgorithm(int chromoSize, int nPopulation, int genNumbe
                                             this->evaluation_function);
             this->population->insertPopulationItem(ind);
         }
+        //random start new solution
+        this->population->initialize();
     }catch(MyException& caught){
         std::cout<<caught.getMessage()<<std::endl;
     }
@@ -206,7 +208,6 @@ void GeneticAlgorithm::computeFitness(int i0){
  */
 void GeneticAlgorithm::search(){
     try{
-        this->population->initialize();
         //compute fitness with the initial populations
         this->computeFitness(0);
         iterationCurrent=1;

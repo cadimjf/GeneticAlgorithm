@@ -13,6 +13,11 @@ double myFitness(vector<double> param){
     return fabs(res);
 }
 void run(){
+    vector<double> myFirstGuess;
+    myFirstGuess.push_back(10.0);
+    myFirstGuess.push_back(10.0);
+    double noise  = 0.3;
+
     int iterations = 1000000;
     double stopCriteria = 1e-6;
     double (*function_ptr)(vector<double>) = &myFitness;
@@ -25,24 +30,28 @@ void run(){
     ga->population->setMaxParameter(0, 1000);
     ga->population->setMaxParameter(1, 1000);
     ga->setStopCriteria(stopCriteria);
+    ga->population->popItems.at(0)->insertItem(myFirstGuess);
     ga->search();
     delete(ga);
     cout<<"================================="<<endl;
+    
     HillClimbing *hc = new HillClimbing(numParameter, iterations, function_ptr);
-    hc->population->setNoise(0.1);
+    hc->population->setNoise(noise);
     hc->population->setMaxParameter(0, 1000);
     hc->population->setMaxParameter(1, 1000);
     hc->setStopCriteria(stopCriteria);
+    hc->population->popItems.at(0)->insertItem(myFirstGuess);
     hc->search();
     delete(hc);
     cout<<"================================="<<endl;
 
     SimulatedAnnealing *sa = new SimulatedAnnealing(numParameter, iterations, function_ptr);
-    sa->population->setNoise(0.1);
+    sa->population->setNoise(noise);
     sa->setInitialTemperature(10.0);
     sa->population->setMaxParameter(0, 1000);
     sa->population->setMaxParameter(1, 1000);
     sa->setStopCriteria(stopCriteria);
+    sa->population->popItems.at(0)->insertItem(myFirstGuess);
     sa->search();
     delete(sa);
     cout<<"================================="<<endl;

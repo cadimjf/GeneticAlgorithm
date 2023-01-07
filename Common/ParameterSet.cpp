@@ -119,22 +119,32 @@ double ParameterSet::getRandomDouble(double min, double max){
 }
 
 /**
+ * Random start a single value of the set
+*/
+void ParameterSet::iniParameter(int i){
+    double x = generateRandomParameter(i);
+    this->setParameter(i, x);
+    this->setParameterAux(i, x);
+
+}
+/**
  *
  */
-void ParameterSet::iniParameters()
+void ParameterSet::iniParameterSet()
 {
     for (int i = 0; i < this->getParametersNum(); i++) {
-        double x = generateRandomParameter(i);
-        this->setParameter(i, x);
-        this->setParameterAux(i, x);
+        this->iniParameter(i);
     }
 }
-
+/**
+ * 
+ * */
 double  ParameterSet::evaluate(){
     this->evalutionValueAux =  this->eval_function(this->parametersAUX);
     return evalutionValueAux;
 }
-
+/**
+*/
 void ParameterSet::print(){
     cout<<"Parameter set: "<<endl;
     for (int i=0;i<this->getParametersNum();i++){
@@ -146,8 +156,21 @@ void ParameterSet::print(){
 
 void ParameterSet::setMaxParameter(int i, double val){
     this->parameters.at(i)->setMaxParameter(val);
+    this->iniParameter(i);
 }
 
 void ParameterSet::setMinParameter(int i, double val){
     this->parameters.at(i)->setMinParameter(val);
+    this->iniParameter(i);
+}
+
+void ParameterSet::insertItem(vector<double> v){
+    if(v.size() != this->parametersNum){
+        throw MyException("Invalid number of parameters to insert!", __FILE__, __LINE__);
+    }
+    for(int i=0;i<this->parametersNum;i++){
+        this->setParameter(i, v.at(i));
+        this->setParameterAux(i, v.at(i));    
+    }
+    
 }

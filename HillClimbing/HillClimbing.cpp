@@ -14,6 +14,8 @@ HillClimbing::HillClimbing(int paramSize, int iterNumber, double(*eval_function)
         this->population = new Population<ParameterSet*>(1, paramSize);
         this->population->setNoise(0.01);
         this->population->insertPopulationItem(new ParameterSet(0, paramSize, eval_function));
+        //random start new solution
+        this->population->initialize();
 
 }
 /**
@@ -28,8 +30,9 @@ HillClimbing::~HillClimbing(){
  *
  */
 void HillClimbing::search(){
-    //random start new solution
-    this->population->initialize();
+
+
+
     //compute the evaluation
     double newEvaluation = this->population->popItems.at(0)->evaluate();
     //accept the new parameters

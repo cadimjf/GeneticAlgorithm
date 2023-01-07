@@ -18,6 +18,7 @@ template <class genericPop>
         Population (int popSize, int paramNum){
             this->populationSize  = popSize;
             this->parameterSetSize = paramNum;
+
         };
         ~Population(){this->popItems.clear(); };
 
@@ -29,7 +30,7 @@ template <class genericPop>
 
         void initialize(){
             for(int i=0; i<this->populationSize; i++){
-                this->popItems.at(i)->iniParameters();
+                this->popItems.at(i)->iniParameterSet();
             }
         };
         void setMinParameter(int i, double val){
