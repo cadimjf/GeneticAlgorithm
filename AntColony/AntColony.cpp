@@ -24,8 +24,8 @@ AntColony::AntColony(int numParam, int nAnts, int archiveSize, int itNumber, dou
     this->iterationCurrent=0;
     this->nAnts = nAnts;
     this->archiveSize = archiveSize;
-    this->localitySearchProcess = 1.e-1;
-    this->speedConvergence = 0.85;
+    this->localitySearchProcess = 1.e0;
+    this->speedConvergence = /*0.85*/1.;
 
     this->setStopCriteria(0.0001);
     for(int i=0; i<this->population->getSize(); i++) {
@@ -83,13 +83,8 @@ with the generated solutions. In the following we outline the components of ACOR
 more details.
 */
 void AntColony::search(){
-    //computes the initial fitness, weights and probabilities
-    this->fitness(0, this->population->getSize());
-    //orders the population according to fitness (all the population is sorted)
-    this->population->quickSort(0, this->population->getSize()-1);
-    //computes weights and probabilities
-    this->weights();
-    this->probabilities();
+
+    this->pheromones(0, this->population->getSize());
     iterationCurrent=1;
     do{
         // construct ant solutions
@@ -97,13 +92,15 @@ void AntColony::search(){
 
         //daemon actions local search
         // update pheromones
-        this->pheromones();
+        this->pheromones( this->archiveSize, this->population->getSize() );
 
         iterationCurrent++;
         if(this->population->popItems.at(0)->getEvaluationValue() <=  this->getStopCriteria()){
             cout<<"Reached the stop criteria: "<<this->getStopCriteria()<<endl;
             break;
         }
+        //cout<<"Evaluation "<<population->popItems.at(0)->getEvaluationValue()<<endl;
+
     }while(iterationCurrent<iterationsNumber);
     cout<<"Evaluation "<<population->popItems.at(0)->getEvaluationValue()<<endl;
     cout<<"Iterations : "<<iterationCurrent<<endl;
@@ -112,15 +109,15 @@ void AntColony::search(){
 /***
  * computes the initial fitness, weights and probabilities
  */
-void AntColony::pheromones(){
+void AntColony::pheromones(int ini, int end){
     //computes fitness on the new solution constructed by ants
-    this->fitness(this->archiveSize, this->population->getSize());
+    this->fitness(ini, end);
     //orders the population according to fitness (all the population is sorted)
     this->population->quickSort(0, this->population->getSize()-1);
     /*for(int j=0;j<this->population->getSize();j++)
         cout<<j<<":"<<population->popItems.at(j)->getEvaluationValue()<<" ";
     cout<<endl;
-    getchar();*/
+    */
     //computes new weights and probabilities
     this->weights();
     this->probabilities();
@@ -161,14 +158,30 @@ vector<double> AntColony::antSolutionDistances(int jArchive){
     return distances;
 
 }
+
+vector<double> AntColony::antSolutionStdDev(vector<double> mi){
+    //create a vector and initialize with 0s
+    vector<double> distances(this->population->getParameterSetSize(), 0.0);
+
+    for(int i=0; i<this->population->getParameterSetSize(); i++) {
+        for(int j=0;j<this->archiveSize;j++){
+            double sij = this->population->popItems.at(j)->getParameter(i);
+            distances.at(i) = distances.at(i) + powf(sij - mi.at(i), 2);
+        }
+        distances.at(i) = sqrt(distances.at(i) / (this->archiveSize));
+    }
+    return distances;
+
+}
 /**
  *
  * @param jArchieve
  * @param iParam
  * @return
  */
-vector<double> AntColony::antSigma(int jArchive){
-    vector <double> dist = this->antSolutionDistances(jArchive);
+vector<double> AntColony::antSigma(int jArchive, vector<double> mi){
+    //vector <double> dist = this->antSolutionDistances(jArchive);
+    vector <double> dist = this->antSolutionStdDev(mi);
     for(int i=0; i<this->population->getParameterSetSize(); i++) {
         dist.at(i) = dist.at(i) * this->speedConvergence;
     }
@@ -180,8 +193,11 @@ vector<double> AntColony::antSigma(int jArchive){
  * @param x
  * @return
  */
-double AntColony::antGaussianFunction(double sigma, double mi, double x){
+/*double AntColony::antGaussianFunctionSoch(double sigma, double mi, double x){
     return (1./sigma*sqrt(2.*M_PI))*exp(-powf(x-mi, 2.)/(2.*sigma*sigma));
+}*/
+double AntColony::antGaussianFunction(double sigma, double mi, double x){
+    return exp(-(powf(x-mi, 2.))/(2*sigma*sigma));
 }
 /**
  *
@@ -191,10 +207,11 @@ double AntColony::antGaussianFunction(double sigma, double mi, double x){
  * @return
  */
 double AntColony::antProbabilityDensityFunction(double sigma, double mi, double x){
-    return this->antGaussianFunction(sigma, mi, x);
+    //return sigma * x * doubleRandom(0., 1., &this->randomGenerator);
+    return (1./(sigma*sqrt(2.*M_PI)))*exp(-0.5*powf((x-mi)/sigma, 2));
 }
 /**
- *
+f *
  * @return
  */
 vector<double> AntColony::antMeans(){
@@ -214,11 +231,19 @@ vector<double> AntColony::antMeans(){
  * @param jArchive
  */
 void AntColony::antNewSolution(int jArchive, int iAnt, vector<double> mi){
-    vector<double> sigma = this->antSigma(jArchive);
+    vector<double> sigma = this->antSigma(jArchive, mi);
 
     for(int i=0; i<this->population->getParameterSetSize(); i++) {
         double oldParam = this->population->popItems.at(jArchive)->getParameter(i);
-        double newParam = oldParam * antProbabilityDensityFunction(sigma.at(i), mi.at(i), oldParam);
+        //double pdf = antProbabilityDensityFunction(sigma.at(i), mi.at(i), oldParam);
+        double pdf = antGaussianFunction(sigma.at(i), mi.at(i), oldParam);
+
+        double min = oldParam - pdf*oldParam;
+        double max = oldParam + pdf*oldParam;
+        double newParam = doubleRandom(min, max, &this->randomGenerator);
+        /*cout<<".... "<<sigma.at(i) << " -- " << mi.at(i) <<endl;
+        cout<<newParam<<" = "<<pdf<<" * "<<oldParam<<endl;
+        */
         //puts the new value on the respective ant position
         this->population->popItems.at(archiveSize + iAnt)->setParameterAux(i, newParam);
     }
@@ -233,6 +258,7 @@ void AntColony::antConstructSolutions(){
     for(int j=0; j<this->nAnts; j++){
         //select a solution from archive
         int selectedSolution = this->antSelectSolution();
+        //cout<<"escolhi: "<<selectedSolution<<endl;
         //create a new solution archiveSize + j
         this->antNewSolution(selectedSolution, j, mi);
     }

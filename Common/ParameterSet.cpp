@@ -110,8 +110,10 @@ void ParameterSet::updateParameters(){
  * @return
  */
 double ParameterSet::generateRandomParameter(int i){
-    return this->getRandomDouble(   this->getMinParameter(i),
+
+    double x = this->getRandomDouble(   this->getMinParameter(i),
                                     this->getMaxParameter(i));
+    return x;
 }
 
 double ParameterSet::getRandomDouble(double min, double max){

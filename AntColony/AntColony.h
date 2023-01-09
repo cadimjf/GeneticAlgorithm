@@ -30,15 +30,16 @@ private:
     void weights();
     void probabilities();
 
+    vector<double> antSolutionStdDev(vector<double> mi);
     vector<double> antSolutionDistances(int jArchive);
-    vector<double> antSigma(int jArchive);
+    vector<double> antSigma(int jArchive, vector<double>);
     vector<double> antMeans();
     double antGaussianFunction(double sigma, double mi, double x);
     double antProbabilityDensityFunction(double sigma, double mi, double x);
     void antNewSolution(int jArchive, int iAnt, vector<double>);
     void antConstructSolutions();
     int antSelectSolution();
-    void pheromones();
+    void pheromones(int, int);
 };
 
 
