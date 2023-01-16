@@ -206,6 +206,7 @@ double AntColony::antGaussianFunction(double sigma, double mi, double x){
  * @param x
  * @return
  */
+ //this is not working TODO FIXME
 double AntColony::antProbabilityDensityFunction(double sigma, double mi, double x){
     //return sigma * x * doubleRandom(0., 1., &this->randomGenerator);
     return (1./(sigma*sqrt(2.*M_PI)))*exp(-0.5*powf((x-mi)/sigma, 2));
@@ -236,10 +237,12 @@ void AntColony::antNewSolution(int jArchive, int iAnt, vector<double> mi){
     for(int i=0; i<this->population->getParameterSetSize(); i++) {
         double oldParam = this->population->popItems.at(jArchive)->getParameter(i);
         //double pdf = antProbabilityDensityFunction(sigma.at(i), mi.at(i), oldParam);
+        //this is not working TODO FIXME
         double pdf = antGaussianFunction(sigma.at(i), mi.at(i), oldParam);
 
         double min = oldParam - pdf*oldParam;
         double max = oldParam + pdf*oldParam;
+        //this is not working TODO FIXME
         double newParam = doubleRandom(min, max, &this->randomGenerator);
         /*cout<<".... "<<sigma.at(i) << " -- " << mi.at(i) <<endl;
         cout<<newParam<<" = "<<pdf<<" * "<<oldParam<<endl;

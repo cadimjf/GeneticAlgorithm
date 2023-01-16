@@ -22,7 +22,7 @@ void run(){
     double (*function_ptr)(vector<double>) = &myFitness;
     int numParameter = 2;
     //(*function_ptr)()
-    /*GeneticAlgorithm *ga = new GeneticAlgorithm(numParameter, 50, iterations, function_ptr);
+    GeneticAlgorithm *ga = new GeneticAlgorithm(numParameter, 50, iterations, function_ptr);
     ga->setMutationUniform();
     ga->setElite(2);
     //ga->setMutationProb(0.1);
@@ -55,7 +55,7 @@ void run(){
     delete(sa);
     cout<<"================================="<<endl;
 
-*/
+/*
     AntColony *ac = new AntColony(numParameter, 5, 50, iterations, function_ptr);
     ac->population->setMaxParameter(0, 1000);
     ac->population->setMaxParameter(1, 1000);
@@ -64,7 +64,7 @@ void run(){
     ac->search();
     delete(ac);
     cout<<"================================="<<endl;
-
+*/
 }
 
 int main() {
